@@ -7,12 +7,14 @@ import { invoiceSchema, Invoice } from "@/lib/types";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastProvider } from "@/components/ui/toast";
 import { CheckCircle2 } from "lucide-react";
+import { useInvoices } from "@/context/InvoiceContext";
 
 export default function UploadPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [extractedData, setExtractedData] = useState<Partial<Invoice> | null>(null);
   const [success, setSuccess] = useState(false);
+  const { invoices, addInvoice } = useInvoices();
 
   const handleFileUpload = async (file: File) => {
     setIsProcessing(true);
@@ -45,6 +47,13 @@ export default function UploadPage() {
         throw new Error(result.error || "Error desconocido");
       }
 
+      if (result.data.rif && result.data.numero_factura) {
+        const isDuplicate = invoices.some(inv => inv.rif === result.data.rif && inv.numero_factura === result.data.numero_factura);
+        if (isDuplicate) {
+          alert("¡Advertencia! Esta factura ya fue cargada previamente (mismo RIF y Número de Factura).");
+        }
+      }
+
       setExtractedData(result.data);
       setIsModalOpen(true);
     } catch (error: any) {
@@ -55,7 +64,16 @@ export default function UploadPage() {
   };
 
   const handleSave = (data: Invoice) => {
-    console.log("Guardando factura:", data);
+    if (data.rif && data.numero_factura) {
+      const isDuplicate = invoices.some(inv => inv.rif === data.rif && inv.numero_factura === data.numero_factura && inv.id !== data.id);
+      if (isDuplicate) {
+        if (!confirm("Esta factura ya existe en el sistema. ¿Deseas guardarla de todos modos?")) {
+          return;
+        }
+      }
+    }
+
+    addInvoice(data);
     setIsModalOpen(false);
     setSuccess(true);
     setExtractedData(null);

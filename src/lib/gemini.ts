@@ -15,31 +15,9 @@ export interface GeminiParseResponse {
   };
 }
 
-const INVOICE_EXTRACTION_PROMPT = `Eres un experto en extracción de datos de facturas. A partir de la imagen o PDF proporcionado:
+const INVOICE_EXTRACTION_PROMPT = `Eres un experto contador y procesador de datos OCR. Tu tarea es extraer de manera precisa los datos financieros de la imagen del recibo o factura proporcionada y devolver estrictamente un objeto JSON válido que cumpla con el siguiente esquema:
 
-1. Identifica TODOS los campos posibles:
-   - emisor: nombre de la empresa o entidad
-   - rif: número de identificación fiscal (con inicial J, G o V)
-   - fecha_emision: fecha de emisión (formato ISO: YYYY-MM-DD)
-   - fecha_pago: fecha de pago si existe (formato ISO: YYYY-MM-DD)
-   - concepto: breve descripción del servicio/producto
-   - subtotal: monto antes de impuestos
-   - iva: monto de IVA (puede ser null)
-   - total: monto total
-   - categoria: clasifica como hospedaje, transporte, servicios, equipos u otros
-   - estado_pago: pagada, pendiente, vencida o parcial
-   - moneda: USD o Bs
-   - metodo_pago: tarjeta_credito, tarjeta_debito, efectivo, transferencia
-
-2. Si un campo no se puede determinar, devuelve null.
-3. Si hay línea de items, inclúyelos como un array de objetos con:
-   - descripcion, cantidad (number), precio_unitario (number), subtotal (number)
-4. Genera un ID único con prefijo "inv_".
-5. Devuelve la respuesta estrictamente como JSON válido, SIN markdown, SIN explicaciones.
-
-Ejemplo de respuesta:
 {
-  "id": "inv_abc123",
   "emisor": "Supermercado XYZ",
   "rif": "J-12345678-9",
   ...

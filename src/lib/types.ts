@@ -10,10 +10,10 @@ export const paymentStatusEnum = z.enum([
 ]);
 
 export const categoryEnum = z.enum([
-  "hospedaje",
-  "transporte",
   "servicios",
-  "equipos",
+  "transporte",
+  "oficina",
+  "software",
   "otros",
 ]);
 
@@ -28,10 +28,12 @@ export const invoiceSchema = z.object({
   id: z.string().uuid(),
   emisor: z.string().min(1, "El emisor es requerido"),
   rif: z.string().min(1, "El RIF es requerido"),
+  numero_factura: z.string().optional(),
   fecha_emision: z.string().nullable().optional(),
   fecha_pago: z.string().nullable().optional(),
   concepto: z.string().optional(),
   subtotal: z.number().default(0),
+  tipo_impuesto: z.string().optional(),
   iva: z.number().nullable().default(null),
   total: z.number().default(0),
   categoria: categoryEnum.default("otros"),
@@ -99,10 +101,12 @@ export const createInvoiceDefaults = (): Invoice => invoiceSchema.parse({
   id: "",
   emisor: "",
   rif: "",
+  numero_factura: "",
   fecha_emision: null,
   fecha_pago: null,
   concepto: "",
   subtotal: 0,
+  tipo_impuesto: "",
   iva: null,
   total: 0,
   categoria: "otros",

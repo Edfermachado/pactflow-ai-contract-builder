@@ -109,69 +109,74 @@ export function InvoiceModal({
             {/* Formulario */}
             <form onSubmit={handleSubmit(onSubmit as any)} className="mt-6 space-y-4">
               {/* Campo emisor */}
+              <div>
+                <label className="block text-sm font-medium text-muted-foreground mb-1">
+                  Emisor
+                </label>
+                <input
+                  {...register("emisor", { required: "El emisor es requerido" })}
+                  name="emisor"
+                  className="w-full rounded-lg border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+                  placeholder="Ej: Hotel Caribe Resort"
+                  defaultValue={formData.emisor}
+                  onChange={handleChange}
+                />
+                {errors.emisor && (
+                  <p className="text-xs text-destructive mt-1">{errors.emisor.message}</p>
+                )}
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-muted-foreground mb-1">
-                    Emisor
+                  <label className="text-xs font-medium text-muted-foreground">
+                    RIF / ID Fiscal *
                   </label>
                   <input
-                    {...register("emisor", { required: "El emisor es requerido" })}
-                    name="emisor"
-                    className="w-full rounded-lg border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                    placeholder="Ej: Hotel Caribe Resort"
-                    defaultValue={formData.emisor}
-                    onChange={handleChange}
-                  />
-                  {errors.emisor && (
-                    <p className="text-xs text-destructive mt-1">{errors.emisor.message}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-muted-foreground mb-1">
-                    RIF
-                  </label>
-                  <input
-                    {...register("rif", { required: "El RIF es requerido" })}
-                    name="rif"
-                    className="w-full rounded-lg border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                    placeholder="Ej: J-12345678-9"
-                    defaultValue={formData.rif}
-                    onChange={handleChange}
+                    {...register("rif")}
+                    className={cn(
+                      "mt-1 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-primary",
+                      errors.rif && "border-destructive focus:ring-destructive"
+                    )}
+                    placeholder="J-12345678-9"
                   />
                   {errors.rif && (
-                    <p className="text-xs text-destructive mt-1">{errors.rif.message}</p>
+                    <p className="mt-1 text-xs text-destructive">
+                      {errors.rif.message}
+                    </p>
                   )}
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground">
+                    N° Factura
+                  </label>
+                  <input
+                    {...register("numero_factura")}
+                    className="mt-1 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                    placeholder="000123"
+                  />
                 </div>
               </div>
 
-              {/* Fecha emisión */}
               <div>
                 <label className="block text-sm font-medium text-muted-foreground mb-1">
                   Fecha Emisión
                 </label>
                 <input
                   type="date"
-                  {...register("fecha_emision", { valueAsDate: true })} // type="date" no requiere validación Zod compleja aquí
+                  {...register("fecha_emision", { valueAsDate: true })}
                   name="fecha_emision"
                   className="w-full rounded-lg border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                  defaultValue={formData.fecha_emision || ""}
+                  defaultValue={formData.fecha_emision ? new Date(formData.fecha_emision).toISOString().split('T')[0] : ""}
                   onChange={handleChange}
                 />
-                {formData.fecha_emision && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Formato: YYYY-MM-DD
-                  </p>
-                )}
               </div>
 
-              {/* Concepto */}
               <div>
                 <label className="block text-sm font-medium text-muted-foreground mb-1">
                   Concepto
                 </label>
                 <textarea
-                  {...register("concepto", { valueAsNumber: false })}
+                  {...register("concepto")}
                   name="concepto"
                   rows={2}
                   className="w-full rounded-lg border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary resize-y"
@@ -181,61 +186,32 @@ export function InvoiceModal({
                 />
               </div>
 
-              {/* Subtotal, IVA, Total */}
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-muted-foreground mb-1">
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="text-xs font-medium text-muted-foreground">
                     Subtotal
                   </label>
-                  <input
-                    type="number"
-                    {...register("subtotal", { required: true, min: 0 })}
-                    name="subtotal"
-                    className="w-full rounded-lg border border-input px-3 py-2 numbox focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                    defaultValue={formData.subtotal.toString()}
-                    onChange={handleChange}
-                    min="0"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-muted-foreground mb-1">
-                    IVA
-                  </label>
-                  <input
-                    type="number"
-                    {...register("iva", {})}
-                    name="iva"
-                    className="w-full rounded-lg border border-input px-3 py-2 numbox focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                    defaultValue={formData.iva !== null ? formData.iva.toString() : ""}
-                    onChange={handleChange}
-                  />
-                  {formData.iva !== null && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Dejar vacío si no aplica
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-muted-foreground mb-1">
-                    Total
-                  </label>
-                  <div className="flex items-center gap-2">
+                  <div className="relative mt-1">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
+                      {formData.moneda === "USD" ? "$" : "Bs"}
+                    </span>
                     <input
                       type="number"
-                      {...register("total", { required: true, min: 0 })}
-                      name="total"
-                      className="flex-1 rounded-lg border border-input px-3 py-2 numbox focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-                      defaultValue={formData.total.toString()}
-                      onChange={handleChange}
-                      min="0"
-                      disabled
+                      step="0.01"
+                      {...register("subtotal", { valueAsNumber: true })}
+                      className="w-full rounded-md border border-input bg-transparent pl-8 pr-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-primary numbox"
                     />
-                    <span className="text-sm font-medium text-muted-foreground">
-                      (auto)
-                    </span>
                   </div>
+                </div>
+                <div className="w-24">
+                  <label className="text-xs font-medium text-muted-foreground truncate block">
+                    Tipo Imp.
+                  </label>
+                  <input
+                    {...register("tipo_impuesto")}
+                    className="mt-1 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                    placeholder="16%"
+                  />
                 </div>
               </div>
 
@@ -250,17 +226,17 @@ export function InvoiceModal({
                     name="categoria"
                     className="w-full rounded-lg border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                   >
-                    <option value="hospedaje" selected={formData.categoria === "hospedaje"}>
-                      Hospedaje
+                    <option value="servicios" selected={formData.categoria === "servicios"}>
+                      Servicios
                     </option>
                     <option value="transporte" selected={formData.categoria === "transporte"}>
                       Transporte
                     </option>
-                    <option value="servicios" selected={formData.categoria === "servicios"}>
-                      Servicios
+                    <option value="oficina" selected={formData.categoria === "oficina"}>
+                      Oficina
                     </option>
-                    <option value="equipos" selected={formData.categoria === "equipos"}>
-                      Equipos
+                    <option value="software" selected={formData.categoria === "software"}>
+                      Software
                     </option>
                     <option value="otros" selected={formData.categoria === "otros"}>
                       Otros

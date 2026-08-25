@@ -31,10 +31,10 @@ export function formatPaymentStatus(status: Invoice["estado_pago"]): string {
 
 export function formatCategory(category: Invoice["categoria"]): string {
   const map: Record<Invoice["categoria"], string> = {
-    hospedaje: "Hospedaje",
-    transporte: "Transporte",
     servicios: "Servicios",
-    equipos: "Equipos",
+    transporte: "Transporte",
+    oficina: "Oficina",
+    software: "Software",
     otros: "Otros",
   };
   return map[category] || category;

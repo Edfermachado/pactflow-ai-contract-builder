@@ -15,6 +15,7 @@ import invoicesHistory from "@/data/invoices_history.json";
 
 export default function Home() {
   const [currency, setCurrency] = useState<Currency>("USD");
+  const [isSyncing, setIsSyncing] = useState(false);
   const { invoices, addInvoice, updateInvoice, deleteInvoice } = useInvoices();
 
   useEffect(() => {
@@ -52,6 +53,24 @@ export default function Home() {
     a.download = `facturas_${new Date().toISOString().split("T")[0]}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleSyncGSheets = async () => {
+    setIsSyncing(true);
+    try {
+      const res = await fetch("/api/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ invoices }),
+      });
+      const result = await res.json();
+      if (!result.success) throw new Error(result.error);
+      alert("¡Sincronización exitosa con Google Sheets!");
+    } catch (err: any) {
+      alert(`Error al sincronizar: ${err.message}`);
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   return (
@@ -106,15 +125,30 @@ export default function Home() {
                 Historial de Facturas
               </h2>
             </div>
-            <button
-              onClick={handleExportCSV}
-              disabled={invoices.length === 0}
-              className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground hover:bg-secondary/90"
-              aria-label="Exportar CSV"
-            >
-              <FileDown className="h-4 w-4 inline-block mr-1" />
-              Exportar CSV
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleExportCSV}
+                disabled={invoices.length === 0}
+                className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground hover:bg-secondary/90"
+                aria-label="Exportar CSV"
+              >
+                <FileDown className="h-4 w-4 inline-block mr-1" />
+                Exportar CSV
+              </button>
+              <button
+                onClick={handleSyncGSheets}
+                disabled={invoices.length === 0 || isSyncing}
+                className="rounded-lg bg-[#0F9D58] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#0F9D58]/90"
+                aria-label="Sincronizar Sheets"
+              >
+                {isSyncing ? (
+                  <Loader2 className="h-4 w-4 inline-block mr-1 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4 inline-block mr-1" />
+                )}
+                Sincronizar Sheets
+              </button>
+            </div>
           </div>
 
           <InvoiceTable
@@ -130,7 +164,7 @@ export default function Home() {
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-4">Resumen por Categoría</h3>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {["hospedaje", "transporte", "servicios", "equipos", "otros"].map((cat) => {
+            {["servicios", "transporte", "oficina", "software", "otros"].map((cat) => {
               const total = invoices
                 .filter((inv) => inv.categoria === cat && inv.moneda === currency)
                 .reduce((sum, inv) => sum + inv.total, 0);
