@@ -45,13 +45,13 @@ export function UploadZone({ onUpload, isLoading, error, success }: UploadZonePr
     <div
       {...getRootProps()}
       className={cn(
-        "relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all duration-200",
+        "relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 backdrop-blur-md overflow-hidden",
         isDragActive
-          ? "border-primary bg-primary/5"
-          : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/50",
-        isLoading && "pointer-events-none opacity-70",
-        error && "border-destructive",
-        success && "border-green-500 bg-green-500/5"
+          ? "border-indigo-500 bg-indigo-500/10 shadow-[0_0_40px_rgba(99,102,241,0.2)]"
+          : "border-slate-300 hover:border-indigo-400 hover:bg-white/50 bg-white/30",
+        isLoading && "pointer-events-none opacity-80",
+        error && "border-rose-500 bg-rose-500/5",
+        success && "border-emerald-500 bg-emerald-500/10"
       )}
     >
       <input {...getInputProps()} />
@@ -68,9 +68,9 @@ export function UploadZone({ onUpload, isLoading, error, success }: UploadZonePr
           />
           
           {isLoading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg">
-              <Loader2 className="h-12 w-12 animate-spin text-primary drop-shadow-md mb-2" />
-              <div className="text-sm font-medium bg-background/90 text-foreground px-4 py-1.5 rounded-full shadow-lg border border-border animate-pulse">
+            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg bg-white/30 backdrop-blur-sm z-10">
+              <Loader2 className="h-14 w-14 animate-spin text-indigo-600 drop-shadow-xl mb-3" />
+              <div className="text-sm font-semibold bg-white/90 text-slate-800 px-5 py-2 rounded-full shadow-2xl border border-white/50 animate-pulse">
                 Analizando con IA...
               </div>
             </div>
@@ -94,10 +94,10 @@ export function UploadZone({ onUpload, isLoading, error, success }: UploadZonePr
         <div className="flex flex-col items-center justify-center gap-3 py-8">
           {isLoading ? (
             <>
-              <Loader2 className="h-12 w-12 animate-spin text-primary" />
-              <p className="text-lg font-medium">Procesando imagen...</p>
-              <p className="text-sm text-muted-foreground">
-                Extrayendo datos con IA
+              <Loader2 className="h-14 w-14 animate-spin text-indigo-600 drop-shadow-lg" />
+              <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Procesando imagen...</p>
+              <p className="text-sm font-medium text-slate-500">
+                Extrayendo datos con Gemini IA
               </p>
             </>
           ) : success ? (
@@ -111,24 +111,24 @@ export function UploadZone({ onUpload, isLoading, error, success }: UploadZonePr
             <>
               <div
                 className={cn(
-                  "p-4 rounded-full bg-muted",
-                  isDragActive && "bg-primary/10"
+                  "p-5 rounded-3xl transition-colors duration-300",
+                  isDragActive ? "bg-indigo-500/20 shadow-inner" : "bg-white/60 shadow-sm"
                 )}
               >
                 <Upload
                   className={cn(
-                    "h-10 w-10",
-                    isDragActive ? "text-primary" : "text-muted-foreground"
+                    "h-12 w-12 transition-colors duration-300",
+                    isDragActive ? "text-indigo-600" : "text-slate-400"
                   )}
                 />
               </div>
-              <div>
-                <p className="text-lg font-medium">
+              <div className="mt-2">
+                <p className="text-xl font-bold text-slate-700">
                   {isDragActive
-                    ? "Suelta el archivo aquí"
-                    : "Arrastra tu factura o haz clic para seleccionar"}
+                    ? "Suelta el archivo para escanear"
+                    : "Arrastra tu comprobante aquí"}
                 </p>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="text-sm font-medium text-slate-500 mt-2">
                   Soporta JPG, PNG y PDF (máx. 4MB)
                 </p>
               </div>

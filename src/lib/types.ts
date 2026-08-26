@@ -19,29 +19,29 @@ export const categoryEnum = z.enum([
 
 export const itemSchema = z.object({
   descripcion: z.string(),
-  cantidad: z.number().default(1),
-  precio_unitario: z.number(),
-  subtotal: z.number(),
+  cantidad: z.coerce.number().default(1),
+  precio_unitario: z.coerce.number(),
+  subtotal: z.coerce.number(),
 });
 
 export const invoiceSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(),
   emisor: z.string().min(1, "El emisor es requerido"),
   rif: z.string().min(1, "El RIF es requerido"),
-  numero_factura: z.string().optional(),
+  numero_factura: z.string().optional().nullable(),
   fecha_emision: z.string().nullable().optional(),
   fecha_pago: z.string().nullable().optional(),
-  concepto: z.string().optional(),
-  subtotal: z.number().default(0),
-  tipo_impuesto: z.string().optional(),
-  iva: z.number().nullable().default(null),
-  total: z.number().default(0),
+  concepto: z.string().optional().nullable(),
+  subtotal: z.coerce.number().default(0),
+  tipo_impuesto: z.string().optional().nullable(),
+  iva: z.coerce.number().nullable().default(null),
+  total: z.coerce.number().default(0),
   categoria: categoryEnum.default("otros"),
   estado_pago: paymentStatusEnum,
   moneda: currencyEnum.default("USD"),
-  metodo_pago: z.string().optional(),
+  metodo_pago: z.string().optional().nullable(),
   items: z.array(itemSchema).optional().nullable(),
-  archivo_url: z.string().url().optional(),
+  archivo_url: z.string().url().optional().nullable(),
 });
 
 export type Invoice = z.infer<typeof invoiceSchema>;

@@ -23,9 +23,25 @@ export function InvoiceProvider({
   children: React.ReactNode;
   initialData?: Invoice[];
 }) {
-  const [invoices, setInvoices] = React.useState<Invoice[]>(initialData || []);
+  const [invoices, setInvoices] = React.useState<Invoice[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("docuparse_invoices");
+        if (saved) return JSON.parse(saved);
+      } catch (e) {
+        console.error("Error reading localStorage", e);
+      }
+    }
+    return initialData || [];
+  });
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("docuparse_invoices", JSON.stringify(invoices));
+    }
+  }, [invoices]);
 
   const addInvoice = React.useCallback((invoice: Invoice) => {
     setInvoices((prev) => [...prev, invoice]);

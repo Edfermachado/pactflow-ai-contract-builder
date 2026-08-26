@@ -8,8 +8,10 @@ import { useToast } from "@/components/ui/use-toast";
 import { ToastProvider } from "@/components/ui/toast";
 import { CheckCircle2 } from "lucide-react";
 import { useInvoices } from "@/context/InvoiceContext";
+import { useRouter } from "next/navigation";
 
 export default function UploadPage() {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [extractedData, setExtractedData] = useState<Partial<Invoice> | null>(null);
@@ -95,6 +97,11 @@ export default function UploadPage() {
     setIsModalOpen(false);
     setSuccess(true);
     setExtractedData(null);
+
+    // Redirect to dashboard after 1.5 seconds
+    setTimeout(() => {
+      router.push("/");
+    }, 1500);
   };
 
   return (

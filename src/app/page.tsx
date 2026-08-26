@@ -79,10 +79,10 @@ export default function Home() {
         {/* Header */}
         <header className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-4xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600 drop-shadow-sm">
               DocuParse AI
             </h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="text-muted-foreground mt-1 text-lg font-medium">
               Digitaliza, extrae y categoriza automáticamente tus facturas
             </p>
           </div>
@@ -99,9 +99,9 @@ export default function Home() {
 
             <Link
               href="/upload"
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              className="rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-2"
             >
-              <Upload className="h-4 w-4 inline-block mr-1" />
+              <Upload className="h-4 w-4" />
               Cargar Factura
             </Link>
           </div>
@@ -129,22 +129,22 @@ export default function Home() {
               <button
                 onClick={handleExportCSV}
                 disabled={invoices.length === 0}
-                className="rounded-lg bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground hover:bg-secondary/90"
+                className="rounded-xl bg-white/80 backdrop-blur-md border border-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
                 aria-label="Exportar CSV"
               >
-                <FileDown className="h-4 w-4 inline-block mr-1" />
-                Exportar CSV
+                <FileDown className="h-4 w-4" />
+                CSV
               </button>
               <button
                 onClick={handleSyncGSheets}
                 disabled={invoices.length === 0 || isSyncing}
-                className="rounded-lg bg-[#0F9D58] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#0F9D58]/90"
+                className="rounded-xl bg-gradient-to-r from-[#0F9D58] to-[#0d8a4d] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-green-200 hover:shadow-green-300 hover:-translate-y-0.5 transition-all disabled:opacity-50 flex items-center gap-2"
                 aria-label="Sincronizar Sheets"
               >
                 {isSyncing ? (
-                  <Loader2 className="h-4 w-4 inline-block mr-1 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  <Upload className="h-4 w-4 inline-block mr-1" />
+                  <Upload className="h-4 w-4" />
                 )}
                 Sincronizar Sheets
               </button>

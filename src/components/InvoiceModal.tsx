@@ -58,6 +58,31 @@ export function InvoiceModal({
     resolver: zodResolver(formSchema) as any,
   });
 
+  React.useEffect(() => {
+    if (isOpen && initialData) {
+      const newData = {
+        id: initialData.id || "",
+        emisor: initialData.emisor || "",
+        rif: initialData.rif || "",
+        fecha_emision: initialData.fecha_emision ?? null,
+        fecha_pago: initialData.fecha_pago ?? null,
+        concepto: initialData.concepto || "",
+        subtotal: initialData.subtotal ?? 0,
+        tipo_impuesto: initialData.tipo_impuesto || "",
+        iva: initialData.iva ?? null,
+        total: initialData.total ?? 0,
+        categoria: initialData.categoria ?? "otros",
+        estado_pago: initialData.estado_pago ?? "pendiente",
+        moneda: initialData.moneda ?? currency,
+        metodo_pago: initialData.metodo_pago || "",
+        items: initialData.items ?? [],
+        archivo_url: initialData.archivo_url || "",
+      } as Invoice;
+      setFormData(newData);
+      reset(newData);
+    }
+  }, [isOpen, initialData, reset, currency]);
+
   const onSubmit = (data: Invoice) => {
     onSave(data);
     reset();
@@ -81,20 +106,23 @@ export function InvoiceModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 hidden items-center justify-center overflow-x-hidden overflow-y-auto"
+      className={cn(
+        "fixed inset-0 z-50 items-center justify-center overflow-x-hidden overflow-y-auto",
+        isOpen ? "flex" : "hidden"
+      )}
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
     >
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50">
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-50 flex items-center justify-center p-4">
           <div
-            className="relative max-w-md w-full bg-card rounded-lg p-6 shadow-lg transition-all duration-300"
-            style={{ transform: "scale(0.9)" }}
+            className="relative max-w-md w-full bg-white/90 backdrop-blur-2xl border border-white/50 rounded-3xl p-8 shadow-2xl shadow-indigo-500/10 transition-all duration-300 overflow-y-auto max-h-[90vh]"
+            style={{ transform: "scale(1)" }}
             id="modal-title"
           >
-            <div className="flex items-center justify-between pb-4 border-b border-border">
-              <h2 className="text-xl font-bold">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
                 {initialData ? "Editar Factura" : "Nueva Factura"}
               </h2>
               <button
@@ -224,23 +252,14 @@ export function InvoiceModal({
                   <select
                     {...register("categoria", { required: "La categoría es requerida" })}
                     name="categoria"
+                    defaultValue={formData.categoria}
                     className="w-full rounded-lg border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                   >
-                    <option value="servicios" selected={formData.categoria === "servicios"}>
-                      Servicios
-                    </option>
-                    <option value="transporte" selected={formData.categoria === "transporte"}>
-                      Transporte
-                    </option>
-                    <option value="oficina" selected={formData.categoria === "oficina"}>
-                      Oficina
-                    </option>
-                    <option value="software" selected={formData.categoria === "software"}>
-                      Software
-                    </option>
-                    <option value="otros" selected={formData.categoria === "otros"}>
-                      Otros
-                    </option>
+                    <option value="servicios">Servicios</option>
+                    <option value="transporte">Transporte</option>
+                    <option value="oficina">Oficina</option>
+                    <option value="software">Software</option>
+                    <option value="otros">Otros</option>
                   </select>
                   {errors.categoria && (
                     <p className="text-xs text-destructive mt-1">{errors.categoria.message}</p>
@@ -254,20 +273,13 @@ export function InvoiceModal({
                   <select
                     {...register("estado_pago", { required: "El estado es requerido" })}
                     name="estado_pago"
+                    defaultValue={formData.estado_pago}
                     className="w-full rounded-lg border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                   >
-                    <option value="pagada" selected={formData.estado_pago === "pagada"}>
-                      Pagada
-                    </option>
-                    <option value="pendiente" selected={formData.estado_pago === "pendiente"}>
-                      Pendiente
-                    </option>
-                    <option value="vencida" selected={formData.estado_pago === "vencida"}>
-                      Vencida
-                    </option>
-                    <option value="parcial" selected={formData.estado_pago === "parcial"}>
-                      Parcial
-                    </option>
+                    <option value="pagada">Pagada</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="vencida">Vencida</option>
+                    <option value="parcial">Parcial</option>
                   </select>
                   {errors.estado_pago && (
                     <p className="text-xs text-destructive mt-1">{errors.estado_pago.message}</p>
@@ -284,14 +296,11 @@ export function InvoiceModal({
                   <select
                     {...register("moneda", { required: "La moneda es requerida" })}
                     name="moneda"
+                    defaultValue={formData.moneda}
                     className="w-full rounded-lg border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                   >
-                    <option value="USD" selected={formData.moneda === "USD"}>
-                      USD
-                    </option>
-                    <option value="Bs" selected={formData.moneda === "Bs"}>
-                      Bs
-                    </option>
+                    <option value="USD">USD</option>
+                    <option value="Bs">Bs</option>
                   </select>
                 </div>
 
@@ -302,23 +311,14 @@ export function InvoiceModal({
                   <select
                     {...register("metodo_pago", {})}
                     name="metodo_pago"
+                    defaultValue={formData.metodo_pago || ""}
                     className="w-full rounded-lg border border-input px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
                   >
-                    <option value="" disabled selected={!formData.metodo_pago}>
-                      Seleccionar método
-                    </option>
-                    <option value="tarjeta_credito" selected={formData.metodo_pago === "tarjeta_credito"}>
-                      Tarjeta Crédito
-                    </option>
-                    <option value="tarjeta_debito" selected={formData.metodo_pago === "tarjeta_debito"}>
-                      Tarjeta Débito
-                    </option>
-                    <option value="efectivo" selected={formData.metodo_pago === "efectivo"}>
-                      Efectivo
-                    </option>
-                    <option value="transferencia" selected={formData.metodo_pago === "transferencia"}>
-                      Transferencia
-                    </option>
+                    <option value="" disabled>Seleccionar método</option>
+                    <option value="tarjeta_credito">Tarjeta Crédito</option>
+                    <option value="tarjeta_debito">Tarjeta Débito</option>
+                    <option value="efectivo">Efectivo</option>
+                    <option value="transferencia">Transferencia</option>
                   </select>
                 </div>
               </div>
@@ -385,20 +385,20 @@ export function InvoiceModal({
               )}
 
               {/* Acción */}
-              <div>
+              <div className="pt-2">
                 <button
                   type="submit"
                   disabled={isSubmitting || !isDirty}
-                  className="w-full rounded-lg bg-primary px-4 py-2.5 text-lg font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                  className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3 text-lg font-semibold text-white shadow-lg shadow-indigo-200 hover:shadow-indigo-300 hover:-translate-y-0.5 transition-all duration-200 flex justify-center items-center"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                       Guardando...
                     </>
                   ) : (
                     <>
-                      <Save className="mr-2 h-4 w-4" />
+                      <Save className="mr-2 h-5 w-5" />
                       {initialData ? "Actualizar Factura" : "Guardar Factura"}
                     </>
                   )}
@@ -407,10 +407,10 @@ export function InvoiceModal({
             </form>
 
             {/* Footer con botón cerrar */}
-            <div className="mt-6 pt-6 border-t border-border">
+            <div className="mt-4 pt-4 border-t border-slate-100">
               <button
                 onClick={onClose}
-                className="w-full rounded-lg bg-destructive px-4 py-2.5 text-lg font-medium text-destructive-foreground hover:bg-destructive/90 transition-colors"
+                className="w-full rounded-xl bg-white border border-slate-200 px-4 py-3 text-lg font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
                 aria-label="Cerrar sin guardar"
               >
                 Cancelar

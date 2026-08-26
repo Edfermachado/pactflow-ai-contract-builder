@@ -43,16 +43,16 @@ export function InvoiceTable({
   );
 
   return (
-    <div className="overflow-x-auto rounded-lg bg-card shadow-sm">
+    <div className="overflow-x-auto rounded-2xl bg-white/70 backdrop-blur-xl border border-white/50 shadow-xl shadow-indigo-100/20">
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row gap-4 p-4 border-b border-border bg-background">
+      <div className="flex flex-col sm:flex-row gap-4 p-5 border-b border-white/50 bg-white/40">
         <div className="flex-1">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar emisor o categoría..."
-            className="flex-1 rounded-lg border border-input py-2 pl-3 pr-8 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+            className="flex-1 rounded-xl border border-white/50 bg-white/50 py-2.5 pl-4 pr-8 font-medium shadow-inner focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-colors"
             aria-label="Buscar facturas"
           />
         </div>
@@ -141,7 +141,7 @@ export function InvoiceTable({
             {filtered.map((invoice) => (
               <tr
                 key={invoice.id}
-                className="border-b transition-colors hover:bg-muted/50"
+                className="border-b border-slate-200/60 transition-colors hover:bg-white/80"
               >
                 <td className="py-3 pl-2">
                   <input
