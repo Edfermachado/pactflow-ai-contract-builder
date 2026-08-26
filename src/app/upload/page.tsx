@@ -15,6 +15,7 @@ export default function UploadPage() {
   const [extractedData, setExtractedData] = useState<Partial<Invoice> | null>(null);
   const [success, setSuccess] = useState(false);
   const { invoices, addInvoice } = useInvoices();
+  const { toast } = useToast();
 
   const handleFileUpload = async (file: File) => {
     setIsProcessing(true);
@@ -50,14 +51,31 @@ export default function UploadPage() {
       if (result.data.rif && result.data.numero_factura) {
         const isDuplicate = invoices.some(inv => inv.rif === result.data.rif && inv.numero_factura === result.data.numero_factura);
         if (isDuplicate) {
-          alert("¡Advertencia! Esta factura ya fue cargada previamente (mismo RIF y Número de Factura).");
+          toast({
+            title: "Posible Duplicado",
+            description: "Esta factura (mismo RIF y Número) ya existe en tu historial.",
+            variant: "default",
+          });
         }
       }
 
       setExtractedData(result.data);
       setIsModalOpen(true);
     } catch (error: any) {
-      alert(error.message || "No se pudieron extraer los datos");
+      const msg = error.message || "";
+      let userFriendlyMessage = "No se pudieron extraer los datos. Revisa la imagen.";
+      
+      if (msg.includes("503") || msg.includes("High demand")) {
+        userFriendlyMessage = "Los servidores de IA están saturados en este momento. Por favor, intenta de nuevo en unos segundos.";
+      } else if (msg) {
+        userFriendlyMessage = msg;
+      }
+
+      toast({
+        title: "Error de Procesamiento",
+        description: userFriendlyMessage,
+        variant: "destructive",
+      });
     } finally {
       setIsProcessing(false);
     }

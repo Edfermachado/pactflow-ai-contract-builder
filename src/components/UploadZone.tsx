@@ -61,17 +61,32 @@ export function UploadZone({ onUpload, isLoading, error, success }: UploadZonePr
           <img
             src={preview}
             alt="Preview"
-            className="max-h-48 rounded-lg mx-auto object-contain"
+            className={cn(
+              "max-h-64 rounded-lg mx-auto object-contain transition-all duration-300 shadow-md",
+              isLoading && "opacity-40 blur-sm scale-95"
+            )}
           />
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setPreview(null);
-            }}
-            className="absolute -top-2 -right-2 p-1 bg-destructive text-destructive-foreground rounded-full"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          
+          {isLoading && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center rounded-lg">
+              <Loader2 className="h-12 w-12 animate-spin text-primary drop-shadow-md mb-2" />
+              <div className="text-sm font-medium bg-background/90 text-foreground px-4 py-1.5 rounded-full shadow-lg border border-border animate-pulse">
+                Analizando con IA...
+              </div>
+            </div>
+          )}
+
+          {!isLoading && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setPreview(null);
+              }}
+              className="absolute -top-3 -right-3 p-1.5 bg-destructive text-destructive-foreground rounded-full shadow-lg hover:scale-110 transition-transform"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
       )}
 

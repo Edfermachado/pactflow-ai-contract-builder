@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 export interface GeminiParseResponse {
   success: boolean;
@@ -18,10 +18,35 @@ export interface GeminiParseResponse {
 const INVOICE_EXTRACTION_PROMPT = `Eres un experto contador y procesador de datos OCR. Tu tarea es extraer de manera precisa los datos financieros de la imagen del recibo o factura proporcionada y devolver estrictamente un objeto JSON válido que cumpla con el siguiente esquema:
 
 {
-  "emisor": "Supermercado XYZ",
-  "rif": "J-12345678-9",
-  ...
-}`;
+  "emisor": "Nombre de la empresa o persona que emite",
+  "rif": "El ID fiscal, RIF, RUT, CUIT o similar",
+  "numero_factura": "El número de recibo, factura o ticket",
+  "fecha_emision": "Fecha en formato ISO 8601 (YYYY-MM-DD), null si no se encuentra",
+  "fecha_pago": "Fecha de pago si la hay (YYYY-MM-DD), null si no",
+  "concepto": "Descripción general de la compra o servicio",
+  "subtotal": 0.0,
+  "tipo_impuesto": "Porcentaje o nombre del impuesto (ej. '16%'), vacío si no aplica",
+  "iva": 0.0,
+  "total": 0.0,
+  "categoria": "Una de estas estrictamente: servicios, transporte, oficina, software, otros",
+  "estado_pago": "Una de estas: pagada, pendiente, vencida, parcial",
+  "moneda": "USD o Bs",
+  "metodo_pago": "Efectivo, Transferencia, Zelle, Tarjeta, etc",
+  "items": [
+    {
+      "descripcion": "Nombre del producto/servicio",
+      "cantidad": 1,
+      "precio_unitario": 0.0,
+      "subtotal": 0.0
+    }
+  ]
+}
+
+Reglas críticas:
+1. Extrae los montos de "subtotal", "iva" y "total".
+2. Extrae el "tipo_impuesto" (ej. 16%) si se muestra de forma explícita.
+3. Categoriza inteligentemente entre: servicios, transporte, oficina, software u otros.
+4. Devuelve SOLO el objeto JSON puro, sin marcadores markdown, sin explicaciones.`;
 
 export async function parseInvoiceImage(imageBase64: string, mimeType: string = "image/jpeg"): Promise<GeminiParseResponse> {
   try {
