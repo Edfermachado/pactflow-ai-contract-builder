@@ -219,8 +219,8 @@ _________________________________             _________________________________
       {/* Split Main Area: Izquierda Formulario (52%) | Derecha Previsualización (48%) */}
       <div className="main-split-container">
         
-        {/* Panel Izquierdo (Formulario) */}
-        <div className={`panel-wrapper ${mobileView === "wizard" ? "active-mobile-panel" : "hidden-mobile-panel"}`}>
+        {/* Contract Wizard directamente en el container */}
+        <div className={`wizard-left-panel ${mobileView !== "wizard" ? "mobile-hidden" : ""}`}>
           <ContractWizard
             formData={formData}
             setFormData={setFormData}
@@ -231,8 +231,8 @@ _________________________________             _________________________________
           />
         </div>
 
-        {/* Panel Derecho (Vista Previa en Hoja de Papel) */}
-        <div className={`panel-wrapper ${mobileView === "preview" ? "active-mobile-panel" : "hidden-mobile-panel"}`}>
+        {/* Contract Preview directamente en el container */}
+        <div className={`preview-right-panel ${mobileView !== "preview" ? "mobile-hidden" : ""}`}>
           <ContractPreview
             contractText={contractText}
             setContractText={setContractText}
@@ -242,31 +242,6 @@ _________________________________             _________________________________
         </div>
 
       </div>
-
-      <style jsx>{`
-        .panel-wrapper {
-          height: 100%;
-        }
-        .panel-wrapper:first-child {
-          width: 52%;
-        }
-        .panel-wrapper:last-child {
-          width: 48%;
-        }
-        @media (max-width: 1023px) {
-          .panel-wrapper {
-            width: 100% !important;
-          }
-          .hidden-mobile-panel {
-            display: none !important;
-          }
-          .active-mobile-panel {
-            display: flex !important;
-            flex-direction: column;
-            width: 100% !important;
-          }
-        }
-      `}</style>
 
     </div>
   );
