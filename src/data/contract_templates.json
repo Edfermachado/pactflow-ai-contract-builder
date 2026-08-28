@@ -1,0 +1,86 @@
+{
+  "jurisdictions": [
+    { "id": "general", "name": "Internacional / Ley General de Comercio Digital", "code": "INT" },
+    { "id": "es", "name": "España (Código Civil & Ley de Servicios de la Sociedad de Información)", "code": "ES" },
+    { "id": "mx", "name": "México (Código de Comercio y Ley Federal de Protección al Consumidor)", "code": "MX" },
+    { "id": "co", "name": "Colombia (Código de Comercio & Comercio Electrónico)", "code": "CO" },
+    { "id": "ar", "name": "Argentina (Código Civil y Comercial de la Nación)", "code": "AR" },
+    { "id": "us", "name": "Estados Unidos / Ley Delaware & Comercio Internacional", "code": "US" }
+  ],
+  "serviceTypes": [
+    { "id": "web_dev", "label": "Desarrollo Web & Aplicaciones", "icon": "Code" },
+    { "id": "ui_ux", "label": "Diseño UI/UX & Branding", "icon": "Palette" },
+    { "id": "marketing", "label": "Marketing Digital & Seo", "icon": "TrendingUp" },
+    { "id": "content", "label": "Creación de Contenido & Redacción", "icon": "FileText" },
+    { "id": "consulting", "label": "Consultoría Técnica & Asesoría", "icon": "Briefcase" }
+  ],
+  "paymentStructures": [
+    { "id": "50_50", "name": "50% Anticipo + 50% al Entregar", "description": "Formato estándar de bajo riesgo para ambas partes." },
+    { "id": "milestones", "name": "Pago por Hitos / Fases (30% / 40% / 30%)", "description": "Recomendado para proyectos grandes de más de 30 días." },
+    { "id": "retainer", "name": "Retainer Mensual / Cuota Fija", "description": "Servicios continuos de soporte, diseño o mantenimiento." },
+    { "id": "100_upfront", "name": "100% Anticipado", "description": "Proyectos de corta duración (< 5 días) o consulta express." }
+  ],
+  "ipClauses": [
+    { "id": "full_transfer_on_payment", "title": "Transferencia total tras pago 100%", "text": "Los derechos patrimoniales de propiedad intelectual sobre los entregables serán transferidos al CLIENTE de forma exclusiva únicamente al momento de la recepción completa e incondicional del pago total pactado." },
+    { "id": "shared_license", "title": "Licencia no exclusiva de uso", "text": "El PRESTADOR conserva la propiedad intelectual de la metodología y librerías base, otorgando al CLIENTE una licencia perpetua e irrevocable para el uso del producto final." },
+    { "id": "portfolio_rights", "title": "Derecho a exhibir en Portafolio", "text": "El PRESTADOR se reserva el derecho de exhibir el trabajo finalizado en su portafolio comercial y canales digitales con fines promocionales, respetando la confidencialidad de datos sensibles." }
+  ],
+  "templates": [
+    {
+      "id": "tpl_web_fullstack",
+      "title": "Desarrollo Web Full-Stack Next.js",
+      "serviceType": "web_dev",
+      "jurisdiction": "general",
+      "scope": "Desarrollo completo de aplicación web responsive utilizando Next.js, integración de API backend, base de datos y sistema de autenticación de usuarios. Pruebas unitarias básicas y optimización de velocidad de carga (SEO técnico).",
+      "deliverables": [
+        "Código fuente completo en repositorio GitHub/GitLab",
+        "Documentación técnica de despliegue y variables de entorno",
+        "Web pública desplegada en producción (Vercel/AWS)",
+        "30 días de garantía para corrección de bugs o errores de código"
+      ],
+      "timelineDays": 21,
+      "paymentStructure": "50_50",
+      "totalAmount": 1500,
+      "currency": "USD",
+      "lateFeePercentage": 1.5,
+      "revisionRounds": 2
+    },
+    {
+      "id": "tpl_brand_design",
+      "title": "Diseño de Identidad de Marca & Sistema UI",
+      "serviceType": "ui_ux",
+      "jurisdiction": "general",
+      "scope": "Creación de manual de marca, paleta de colores, tipografías corporativas, diseño de logotipo en formato vectorial y UI Kit ejecutable en Figma para producto web/móvil.",
+      "deliverables": [
+        "Archivo maestro de Figma con componentes interactivos",
+        "Manual de Identidad de Marca en PDF de alta resolución",
+        "Pack de logotipos vectoriales (SVG, PNG transparente, AI)",
+        "Guía de estilos de componentes UI"
+      ],
+      "timelineDays": 14,
+      "paymentStructure": "50_50",
+      "totalAmount": 950,
+      "currency": "USD",
+      "lateFeePercentage": 2.0,
+      "revisionRounds": 3
+    },
+    {
+      "id": "tpl_marketing_retainer",
+      "title": "Gestión Mensual de Marketing Digital & SEO",
+      "serviceType": "marketing",
+      "jurisdiction": "general",
+      "scope": "Optimización continua de campañas publicitarias en Meta Ads / Google Ads, auditoría SEO mensual, creación de 8 piezas gráficas publicitarias y reporte mensual de métricas y conversión.",
+      "deliverables": [
+        "Dashboard interactivo de rendimiento de campañas",
+        "8 Artes publicitarios optimizados para redes sociales",
+        "Reporte mensual de rendimiento y recomendación estratégica"
+      ],
+      "timelineDays": 30,
+      "paymentStructure": "retainer",
+      "totalAmount": 600,
+      "currency": "USD",
+      "lateFeePercentage": 1.5,
+      "revisionRounds": 2
+    }
+  ]
+}
