@@ -9,6 +9,7 @@ import templatesData from "@/data/contract_templates.json";
 export default function Home() {
   const [activeTemplateId, setActiveTemplateId] = useState("tpl_web_fullstack");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [mobileView, setMobileView] = useState("wizard"); // 'wizard' | 'preview'
 
   // Formulario inicial rellenado con la plantilla por defecto en español
   const [formData, setFormData] = useState({
@@ -192,6 +193,8 @@ _________________________________             _________________________________
       if (data.success) {
         setContractText(data.contractText);
         setAuditResult(data.auditResult);
+        // Switch to preview tab automatically on mobile after generation
+        setMobileView("preview");
       } else {
         alert(data.error || "Error al generar el contrato.");
       }
@@ -206,31 +209,64 @@ _________________________________             _________________________________
   return (
     <div className="app-container">
       
-      {/* TopNavBar */}
-      <Navbar onNewContract={handleResetForm} />
+      {/* TopNavBar con soporte de vista móvil */}
+      <Navbar 
+        onNewContract={handleResetForm}
+        mobileView={mobileView}
+        setMobileView={setMobileView}
+      />
 
       {/* Split Main Area: Izquierda Formulario (52%) | Derecha Previsualización (48%) */}
       <div className="main-split-container">
         
-        {/* Panel Izquierdo (52%) - Formulario */}
-        <ContractWizard
-          formData={formData}
-          setFormData={setFormData}
-          onGenerate={handleGenerateContract}
-          isGenerating={isGenerating}
-          onSelectTemplate={handleSelectTemplate}
-          activeTemplateId={activeTemplateId}
-        />
+        {/* Panel Izquierdo (Formulario) */}
+        <div className={`panel-wrapper ${mobileView === "wizard" ? "active-mobile-panel" : "hidden-mobile-panel"}`}>
+          <ContractWizard
+            formData={formData}
+            setFormData={setFormData}
+            onGenerate={handleGenerateContract}
+            isGenerating={isGenerating}
+            onSelectTemplate={handleSelectTemplate}
+            activeTemplateId={activeTemplateId}
+          />
+        </div>
 
-        {/* Panel Derecho (48%) - Vista Previa en Hoja de Papel */}
-        <ContractPreview
-          contractText={contractText}
-          setContractText={setContractText}
-          auditResult={auditResult}
-          formData={formData}
-        />
+        {/* Panel Derecho (Vista Previa en Hoja de Papel) */}
+        <div className={`panel-wrapper ${mobileView === "preview" ? "active-mobile-panel" : "hidden-mobile-panel"}`}>
+          <ContractPreview
+            contractText={contractText}
+            setContractText={setContractText}
+            auditResult={auditResult}
+            formData={formData}
+          />
+        </div>
 
       </div>
+
+      <style jsx>{`
+        .panel-wrapper {
+          height: 100%;
+        }
+        .panel-wrapper:first-child {
+          width: 52%;
+        }
+        .panel-wrapper:last-child {
+          width: 48%;
+        }
+        @media (max-width: 1023px) {
+          .panel-wrapper {
+            width: 100% !important;
+          }
+          .hidden-mobile-panel {
+            display: none !important;
+          }
+          .active-mobile-panel {
+            display: flex !important;
+            flex-direction: column;
+            width: 100% !important;
+          }
+        }
+      `}</style>
 
     </div>
   );

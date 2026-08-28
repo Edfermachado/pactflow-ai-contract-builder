@@ -46,9 +46,9 @@ html, body {
   font-family: var(--font-body);
   font-size: 14px;
   line-height: 1.5;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Material Symbols Icon Utility */
@@ -89,7 +89,7 @@ html, body {
 .app-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   overflow: hidden;
   background-color: var(--bg-background);
@@ -250,6 +250,81 @@ html, body {
   animation: pulseBadge 2s infinite ease-in-out;
 }
 
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVE MEDIA QUERIES (< 1024px)
+   ========================================================================== */
+
+@media screen and (max-width: 1023px) {
+  html, body, .app-container {
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .top-navbar {
+    padding: 0 14px;
+    height: 52px;
+  }
+
+  .main-split-container {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .wizard-left-panel, .preview-right-panel {
+    width: 100% !important;
+    height: auto !important;
+    border-right: none;
+    overflow: visible;
+  }
+
+  .wizard-left-panel {
+    border-bottom: 2px solid var(--color-outline-variant);
+  }
+
+  .paper-sheet-container {
+    padding: 16px 12px 100px 12px;
+    overflow-y: visible;
+  }
+
+  .paper-sheet {
+    padding: 20px 16px;
+    min-height: auto;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .floating-dock {
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 480px;
+    padding: 8px 12px;
+    gap: 8px;
+    justify-content: space-around;
+  }
+
+  .floating-dock button, .floating-dock span {
+    font-size: 10px !important;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .wizard-stepper-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .form-grid-2col {
+    grid-template-columns: 1fr !important;
+  }
+
+  .form-grid-3col {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 /* Print CSS Rules for Native PDF Generation / Save as PDF */
 @media print {
   body, html, .app-container, .main-split-container {
@@ -262,6 +337,7 @@ html, body {
   .top-navbar,
   .wizard-left-panel,
   .floating-dock,
+  .mobile-view-toggle,
   .btn-secondary,
   .pulse-badge {
     display: none !important;
