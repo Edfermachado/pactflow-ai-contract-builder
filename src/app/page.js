@@ -10,7 +10,7 @@ export default function Home() {
   const [activeTemplateId, setActiveTemplateId] = useState("tpl_web_fullstack");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Initial Form Data prefilled with default template
+  // Formulario inicial rellenado con la plantilla por defecto en español
   const [formData, setFormData] = useState({
     providerName: "DevStudio Freelance C.A.",
     providerTaxId: "J-40912345-0",
@@ -30,13 +30,13 @@ export default function Home() {
     paymentStructure: "50_50",
     lateFeePercentage: 1.5,
     revisionRounds: 2,
-    jurisdiction: "Delaware (Recommended)",
+    jurisdiction: "Delaware (Recomendado)",
     includeIPClause: true,
     includeNDA: true,
     customClauses: ""
   });
 
-  // Default contract text
+  // Texto del contrato inicial por defecto en español
   const [contractText, setContractText] = useState(`CONTRATO DE PRESTACIÓN DE SERVICIOS PROFESIONALES
 
 ## ENCABEZADO Y PARTES CONTRATANTES
@@ -82,7 +82,7 @@ Ambas partes acuerdan mantener en estricta confidencialidad toda la información
 ---
 
 ## CLÁUSULA SEXTA: JURISDICCIÓN Y LEY APLICABLE
-Este contrato se regirá e interpretará conforme a las leyes vigentes en Delaware (Recommended).
+Este contrato se regirá e interpretará conforme a las leyes vigentes en Delaware (Recomendado).
 
 ---
 
@@ -95,10 +95,10 @@ DevStudio Freelance C.A.                       Acme Corp LLC
 
   const [auditResult, setAuditResult] = useState({
     score: 95,
-    status: "Audited",
+    status: "Auditado",
     alerts: [],
     recommendations: [
-      { title: "Coherencia de Estructura", message: "La relación entre plazo (21 días) y entregables es proporcional." }
+      { title: "Coherencia de Estructura", message: "La relación entre plazo (21 días) y entregables es proporcional y equilibrada." }
     ]
   });
 
@@ -118,14 +118,14 @@ DevStudio Freelance C.A.                       Acme Corp LLC
       paymentStructure: template.paymentStructure,
       lateFeePercentage: template.lateFeePercentage,
       revisionRounds: template.revisionRounds,
-      jurisdiction: formData.jurisdiction || "Delaware (Recommended)",
+      jurisdiction: formData.jurisdiction || "Delaware (Recomendado)",
       includeIPClause: true,
       includeNDA: true,
       customClauses: ""
     });
   };
 
-  // Reset complete form & document preview to blank slate
+  // Reseteo completo a borrador limpio
   const handleResetForm = () => {
     setActiveTemplateId(null);
     setFormData({
@@ -142,7 +142,7 @@ DevStudio Freelance C.A.                       Acme Corp LLC
       paymentStructure: "50_50",
       lateFeePercentage: 1.5,
       revisionRounds: 2,
-      jurisdiction: "Delaware (Recommended)",
+      jurisdiction: "Delaware (Recomendado)",
       includeIPClause: true,
       includeNDA: true,
       customClauses: ""
@@ -156,7 +156,7 @@ En la fecha [FECHA DE FIRMA], comparecen por una parte [NOMBRE DEL PRESTADOR DE 
 ---
 
 ## CLÁUSULA PRIMERA: OBJETO DEL CONTRATO
-[Complete el formulario con el alcance y haga clic en 'Audit Clauses with Legal Agent' para redactar automáticamente con IA]
+[Complete el formulario con el alcance y haga clic en 'Auditar y Generar Contrato con IA' para redactar automáticamente con IA]
 
 ---
 
@@ -209,10 +209,10 @@ _________________________________             _________________________________
       {/* TopNavBar */}
       <Navbar onNewContract={handleResetForm} />
 
-      {/* Split Main Area: Left Wizard (52%) | Right Preview (48%) */}
+      {/* Split Main Area: Izquierda Formulario (52%) | Derecha Previsualización (48%) */}
       <div className="main-split-container">
         
-        {/* Left Panel (52%) - Form Wizard */}
+        {/* Panel Izquierdo (52%) - Formulario */}
         <ContractWizard
           formData={formData}
           setFormData={setFormData}
@@ -222,7 +222,7 @@ _________________________________             _________________________________
           activeTemplateId={activeTemplateId}
         />
 
-        {/* Right Panel (48%) - Live Paper Preview */}
+        {/* Panel Derecho (48%) - Vista Previa en Hoja de Papel */}
         <ContractPreview
           contractText={contractText}
           setContractText={setContractText}

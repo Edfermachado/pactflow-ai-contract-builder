@@ -3,38 +3,31 @@
 export default function Navbar({ onNewContract }) {
   return (
     <nav className="top-navbar">
-      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-        <div 
-          onClick={onNewContract} 
-          style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}
-        >
-          <span style={{ fontFamily: "var(--font-display)", fontSize: "22px", fontWeight: "700", color: "var(--color-primary)", tracking: "-0.02em" }}>
-            PactFlow AI
+      {/* Brand Identity */}
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div style={{ width: "32px", height: "32px", borderRadius: "6px", backgroundColor: "var(--color-primary-container)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ffffff" }}>
+          <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>gavel</span>
+        </div>
+        <div>
+          <span style={{ fontFamily: "var(--font-display)", fontWeight: "800", fontSize: "16px", letterSpacing: "-0.02em", color: "var(--color-on-surface)" }}>
+            PactFlow <span style={{ color: "var(--color-primary)" }}>AI</span>
           </span>
-          <span style={{ 
-            fontSize: "10px", 
-            fontFamily: "var(--font-mono)", 
-            padding: "2px 8px", 
-            borderRadius: "4px", 
-            backgroundColor: "rgba(192, 193, 255, 0.12)", 
-            border: "1px solid var(--color-primary)", 
-            color: "var(--color-primary)",
-            fontWeight: "600"
-          }}>
+          <span style={{ fontSize: "11px", color: "var(--color-on-surface-variant)", marginLeft: "8px", fontFamily: "var(--font-mono)" }}>
             MVP v1.0
           </span>
         </div>
-
-        <span style={{ color: "var(--color-outline)", fontSize: "14px" }}>|</span>
-
-        <span style={{ fontSize: "13px", color: "var(--color-on-surface-variant)" }}>
-          Generador de Contratos & Auditoría Legal con IA
-        </span>
       </div>
 
+      {/* Action Controls */}
       <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-        <button id="btn-new-contract" onClick={onNewContract} className="btn-primary">
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>refresh</span>
+        <button 
+          id="btn-new-contract"
+          type="button" 
+          onClick={onNewContract} 
+          className="btn-secondary"
+          title="Reiniciar formulario y borrador"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>add</span>
           Nuevo Contrato
         </button>
       </div>
