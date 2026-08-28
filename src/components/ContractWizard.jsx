@@ -9,7 +9,8 @@ export default function ContractWizard({
   onGenerate, 
   isGenerating,
   onSelectTemplate,
-  activeTemplateId
+  activeTemplateId,
+  isMobileHidden
 }) {
   const [activeStepTab, setActiveStepTab] = useState(1);
   const [contractRole, setContractRole] = useState("Prestador de Servicios");
@@ -94,7 +95,7 @@ export default function ContractWizard({
   const progress = getProgress();
 
   return (
-    <div className="wizard-left-panel">
+    <div className={`wizard-left-panel ${isMobileHidden ? "mobile-hidden" : ""}`}>
       
       {/* Stepper Header (Fixed at top) */}
       <header style={{ padding: "20px 24px", borderBottom: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)", width: "100%", boxSizing: "border-box", flexShrink: 0 }}>

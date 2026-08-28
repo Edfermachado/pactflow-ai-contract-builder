@@ -219,27 +219,23 @@ _________________________________             _________________________________
       {/* Split Main Area: Izquierda Formulario (52%) | Derecha Previsualización (48%) */}
       <div className="main-split-container">
         
-        {/* Contract Wizard directamente en el container */}
-        <div className={`wizard-left-panel ${mobileView !== "wizard" ? "mobile-hidden" : ""}`}>
-          <ContractWizard
-            formData={formData}
-            setFormData={setFormData}
-            onGenerate={handleGenerateContract}
-            isGenerating={isGenerating}
-            onSelectTemplate={handleSelectTemplate}
-            activeTemplateId={activeTemplateId}
-          />
-        </div>
+        <ContractWizard
+          formData={formData}
+          setFormData={setFormData}
+          onGenerate={handleGenerateContract}
+          isGenerating={isGenerating}
+          onSelectTemplate={handleSelectTemplate}
+          activeTemplateId={activeTemplateId}
+          isMobileHidden={mobileView !== "wizard"}
+        />
 
-        {/* Contract Preview directamente en el container */}
-        <div className={`preview-right-panel ${mobileView !== "preview" ? "mobile-hidden" : ""}`}>
-          <ContractPreview
-            contractText={contractText}
-            setContractText={setContractText}
-            auditResult={auditResult}
-            formData={formData}
-          />
-        </div>
+        <ContractPreview
+          contractText={contractText}
+          setContractText={setContractText}
+          auditResult={auditResult}
+          formData={formData}
+          isMobileHidden={mobileView !== "preview"}
+        />
 
       </div>
 

@@ -8,7 +8,8 @@ export default function ContractPreview({
   contractText, 
   setContractText, 
   auditResult, 
-  formData 
+  formData,
+  isMobileHidden
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -113,7 +114,7 @@ export default function ContractPreview({
   };
 
   return (
-    <div className="preview-right-panel">
+    <div className={`preview-right-panel ${isMobileHidden ? "mobile-hidden" : ""}`}>
       
       {/* Barra Superior de Auditoría Legal */}
       {auditResult && (
