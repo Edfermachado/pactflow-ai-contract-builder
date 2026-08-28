@@ -335,7 +335,9 @@ html, body {
     display: none !important;
   }
 
+  /* Asegurar que la vista previa se fuerce visible al imprimir en móviles */
   .preview-right-panel {
+    display: flex !important;
     width: 100% !important;
     height: auto !important;
     overflow: visible !important;
@@ -357,5 +359,6 @@ html, body {
     padding: 0 !important;
     min-height: auto !important;
     color: #000000 !important;
+    display: block !important;
   }
 }

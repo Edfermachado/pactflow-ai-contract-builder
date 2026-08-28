@@ -15,18 +15,15 @@ export default function ContractPreview({
   const [isExporting, setIsExporting] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Impresión nativa del navegador para Guardar como PDF
-  const handlePrintPDF = () => {
-    confetti({
-      particleCount: 60,
-      spread: 60,
-      origin: { y: 0.6 }
-    });
-    window.print();
-  };
+  // Acción principal: Descargar PDF listo
+  const handleExportPDF = async (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    if (isExporting) return;
 
-  // Descarga directa con jsPDF
-  const handleExportPDF = async () => {
     try {
       setIsExporting(true);
       await generateContractPDF({
@@ -44,13 +41,33 @@ export default function ContractPreview({
       });
     } catch (err) {
       console.error("Error al generar PDF:", err);
-      alert("Ocurrió un error al generar el PDF.");
+      alert("Ocurrió un error al generar el PDF. Por favor reintente.");
     } finally {
       setIsExporting(false);
     }
   };
 
-  const handleCopyMarkdown = () => {
+  // Impresión nativa del navegador para Guardar como PDF
+  const handlePrintPDF = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    confetti({
+      particleCount: 60,
+      spread: 60,
+      origin: { y: 0.6 }
+    });
+    window.print();
+  };
+
+  const handleCopyMarkdown = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     navigator.clipboard.writeText(contractText || "");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -190,7 +207,7 @@ export default function ContractPreview({
 
       </div>
 
-      {/* Dock Flotante Inferior */}
+      {/* Dock Flotante Inferior — Sin Ambigüedad */}
       <div className="floating-dock">
         <div style={{ display: "flex", alignItems: "center", gap: "6px", paddingRight: "10px", borderRight: "1px solid var(--color-outline-variant)" }}>
           <span className="pulse-badge" style={{ width: "8px", height: "8px", borderRadius: "50%", backgroundColor: "var(--color-secondary)", display: "inline-block" }}></span>
@@ -199,35 +216,39 @@ export default function ContractPreview({
           </span>
         </div>
 
-        {/* Botón de Impresión Nativa (Guardar como PDF) */}
-        <button 
-          id="btn-print-pdf-dock"
-          type="button"
-          onClick={handlePrintPDF}
-          style={{ background: "none", border: "none", color: "var(--color-primary)", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: "700", display: "flex", alignItems: "center", gap: "5px" }}
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>print</span>
-          Imprimir / Guardar PDF
-        </button>
-
-        {/* Descarga directa jsPDF */}
+        {/* ÚNICO BOTÓN PRINCIPAL DE EXPEDICIÓN DE PDF (Cero Ambigüedad) */}
         <button 
           id="btn-download-pdf-dock"
           type="button"
           onClick={handleExportPDF}
           disabled={isExporting}
-          style={{ background: "none", border: "none", color: "var(--color-on-surface)", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: "600", display: "flex", alignItems: "center", gap: "5px" }}
+          className="btn-primary"
+          style={{ padding: "6px 14px", fontSize: "11px", borderRadius: "9999px" }}
         >
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>download</span>
-          {isExporting ? "Exportando..." : "Descargar PDF"}
+          <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>download</span>
+          {isExporting ? "Generando..." : "Descargar PDF"}
         </button>
 
+        {/* Opción Secundaria: Imprimir */}
+        <button 
+          id="btn-print-pdf-dock"
+          type="button"
+          onClick={handlePrintPDF}
+          style={{ background: "none", border: "none", color: "var(--color-on-surface-variant)", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: "600", display: "flex", alignItems: "center", gap: "4px" }}
+          title="Abrir diálogo de impresión del navegador"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>print</span>
+          Imprimir
+        </button>
+
+        {/* Opción Secundaria: Copiar Texto Markdown */}
         <button 
           type="button"
           onClick={handleCopyMarkdown}
-          style={{ background: "none", border: "none", color: "var(--color-on-surface)", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: "600", display: "flex", alignItems: "center", gap: "5px" }}
+          style={{ background: "none", border: "none", color: "var(--color-on-surface-variant)", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: "600", display: "flex", alignItems: "center", gap: "4px" }}
+          title="Copiar contenido en formato Markdown"
         >
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>content_copy</span>
+          <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>content_copy</span>
           {copied ? "¡Copiado!" : "Copiar MD"}
         </button>
       </div>

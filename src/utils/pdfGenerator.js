@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
  * Skill / Comando: /gen-contract-pdf
  * Compila las cláusulas seleccionadas, aplica estilos tipográficos de documento formal
  * y emite el archivo descargable directamente en el frontend sin costo de servidor.
+ * Optimizado para compatibilidad 100% en escritorios y navegadores móviles (iOS/Android).
  */
 export async function generateContractPDF({
   projectTitle = "Contrato de Prestación de Servicios",
@@ -26,11 +27,11 @@ export async function generateContractPDF({
 
   let currentY = margin;
 
-  // 1. Marca de agua suave (solo si se especifica explícitamente)
+  // 1. Decoraciones de página (Marca de agua, Encabezados y Pie de Página)
   const addPageDecorations = (pageNum, totalPages) => {
     doc.saveGraphicsState();
     
-    // Marca de agua si existe
+    // Marca de agua suave si se especifica
     if (watermark) {
       doc.setTextColor(230, 230, 235);
       doc.setFontSize(54);
@@ -128,7 +129,7 @@ export async function generateContractPDF({
     currentY += wrappedLines.length * 5 + (isHeading ? 3 : 1);
   }
 
-  // 4. Bloque de Firmas al final (solo si el texto NO contiene ya una sección de firmas)
+  // 4. Bloque de Firmas al final
   const hasSignaturesInText = cleanText.includes("FIRMAS DE CONFORMIDAD") || cleanText.includes("POR EL PRESTADOR") || cleanText.includes("_________________________________");
   
   if (!hasSignaturesInText) {
@@ -142,7 +143,6 @@ export async function generateContractPDF({
     doc.setDrawColor(200, 205, 215);
     doc.setLineWidth(0.4);
 
-    // Firma Prestador
     const boxWidth = (contentWidth - 10) / 2;
     doc.line(margin, currentY + 15, margin + boxWidth, currentY + 15);
     doc.setFont("helvetica", "bold");
@@ -152,7 +152,6 @@ export async function generateContractPDF({
     doc.setFont("helvetica", "normal");
     doc.text(`${providerName}`, margin, currentY + 25);
 
-    // Firma Cliente
     const rightBoxX = margin + boxWidth + 10;
     doc.line(rightBoxX, currentY + 15, rightBoxX + boxWidth, currentY + 15);
     doc.setFont("helvetica", "bold");
@@ -161,15 +160,40 @@ export async function generateContractPDF({
     doc.text(`${clientName}`, rightBoxX, currentY + 25);
   }
 
-  // 5. Aplicar decoraciones a todas las páginas (Número de página total)
+  // 5. Aplicar decoraciones a todas las páginas
   const totalPages = doc.internal.getNumberOfPages();
   for (let p = 1; p <= totalPages; p++) {
     doc.setPage(p);
     addPageDecorations(p, totalPages);
   }
 
-  // 6. Descarga del archivo
+  // 6. Descarga y soporte multiplataforma para navegadores móviles
   const safeFilename = filename || `Contrato_${(clientName || "Cliente").replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`;
-  doc.save(safeFilename);
+
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(typeof navigator !== 'undefined' ? navigator.userAgent : '');
+
+  if (isMobile) {
+    try {
+      // Método Blob URL robusto para iOS Safari / Android Chrome
+      const blob = doc.output('blob');
+      const blobUrl = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = safeFilename;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+    } catch (e) {
+      console.warn("Fallback a doc.save() en móvil:", e);
+      doc.save(safeFilename);
+    }
+  } else {
+    doc.save(safeFilename);
+  }
+
   return safeFilename;
 }
