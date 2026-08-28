@@ -102,6 +102,7 @@ ${provider}                                    ${client}
 
 export default function Home() {
   const [activeTemplateId, setActiveTemplateId] = useState("tpl_web_fullstack");
+  const [activeStepTab, setActiveStepTab] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
   const [mobileView, setMobileView] = useState("wizard"); // 'wizard' | 'preview'
 
@@ -190,9 +191,12 @@ export default function Home() {
     });
   };
 
-  // Reseteo completo a borrador limpio
+  // Reseteo completo a borrador limpio (Botón + Nuevo Contrato)
   const handleResetForm = () => {
     setActiveTemplateId(null);
+    setActiveStepTab(1); // Siempre redirige al Paso 1: Partes y Ley
+    setMobileView("wizard"); // En vista móvil redirige a la pestaña de Formulario
+
     const emptyData = {
       providerName: "",
       providerTaxId: "",
@@ -265,6 +269,8 @@ export default function Home() {
           onSelectTemplate={handleSelectTemplate}
           activeTemplateId={activeTemplateId}
           isMobileHidden={mobileView !== "wizard"}
+          activeStepTab={activeStepTab}
+          setActiveStepTab={setActiveStepTab}
         />
 
         <ContractPreview

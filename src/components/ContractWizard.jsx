@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import templatesData from "@/data/contract_templates.json";
 
 export default function ContractWizard({ 
@@ -10,11 +10,19 @@ export default function ContractWizard({
   isGenerating,
   onSelectTemplate,
   activeTemplateId,
-  isMobileHidden
+  isMobileHidden,
+  activeStepTab = 1,
+  setActiveStepTab
 }) {
-  const [activeStepTab, setActiveStepTab] = useState(1);
   const [contractRole, setContractRole] = useState("Prestador de Servicios");
   const [addedClauses, setAddedClauses] = useState({});
+
+  // Limpiar chips de cláusulas agregadas cuando se resetea la plantilla / nuevo contrato
+  useEffect(() => {
+    if (!activeTemplateId && (!formData.customClauses || formData.customClauses === "")) {
+      setAddedClauses({});
+    }
+  }, [activeTemplateId, formData.customClauses]);
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -128,7 +136,7 @@ export default function ContractWizard({
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => setActiveStepTab(tab.id)}
+                onClick={() => setActiveStepTab && setActiveStepTab(tab.id)}
                 style={{
                   borderLeft: activeStepTab === tab.id ? "3px solid var(--color-primary)" : "3px solid var(--color-outline-variant)",
                   paddingLeft: "6px",
@@ -349,7 +357,7 @@ export default function ContractWizard({
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "4px" }}>
-                <button type="button" className="btn-primary" onClick={() => setActiveStepTab(2)}>
+                <button type="button" className="btn-primary" onClick={() => setActiveStepTab && setActiveStepTab(2)}>
                   Siguiente: Alcance y Entregables
                   <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
                 </button>
@@ -414,10 +422,10 @@ export default function ContractWizard({
               </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
-                <button type="button" className="btn-secondary" onClick={() => setActiveStepTab(1)}>
+                <button type="button" className="btn-secondary" onClick={() => setActiveStepTab && setActiveStepTab(1)}>
                   Anterior
                 </button>
-                <button type="button" className="btn-primary" onClick={() => setActiveStepTab(3)}>
+                <button type="button" className="btn-primary" onClick={() => setActiveStepTab && setActiveStepTab(3)}>
                   Siguiente: Pago y Plazos
                   <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
                 </button>
@@ -504,10 +512,10 @@ export default function ContractWizard({
               </div>
 
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
-                <button type="button" className="btn-secondary" onClick={() => setActiveStepTab(2)}>
+                <button type="button" className="btn-secondary" onClick={() => setActiveStepTab && setActiveStepTab(2)}>
                   Anterior
                 </button>
-                <button type="button" className="btn-primary" onClick={() => setActiveStepTab(4)}>
+                <button type="button" className="btn-primary" onClick={() => setActiveStepTab && setActiveStepTab(4)}>
                   Siguiente: Propiedad e IP
                   <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
                 </button>
@@ -558,7 +566,7 @@ export default function ContractWizard({
               </div>
 
               <div style={{ display: "flex", justifyContent: "flex-start", marginTop: "4px" }}>
-                <button type="button" className="btn-secondary" onClick={() => setActiveStepTab(3)}>
+                <button type="button" className="btn-secondary" onClick={() => setActiveStepTab && setActiveStepTab(3)}>
                   Anterior
                 </button>
               </div>
