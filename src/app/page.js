@@ -6,24 +6,118 @@ import ContractWizard from "@/components/ContractWizard";
 import ContractPreview from "@/components/ContractPreview";
 import templatesData from "@/data/contract_templates.json";
 
+// Generador reactivo del texto del contrato basado en el estado del formulario
+export function buildContractDraft(data) {
+  const provider = data.providerName || "[PRESTADOR DE SERVICIOS]";
+  const providerId = data.providerTaxId || "[RIF/DNI PRESTADOR]";
+  const client = data.clientName || "[CLIENTE]";
+  const clientId = data.clientTaxId || "[RIF/DNI CLIENTE]";
+  const title = data.projectTitle || "ACUERDO MARCO DE SERVICIOS LEGALES";
+  const scope = data.scope || "[Alcance de los servicios por definir]";
+  const amount = data.totalAmount || "0";
+  const currency = data.currency || "USD";
+  const days = data.timelineDays || "30";
+  const jurisdiction = data.jurisdiction || "Delaware (Recomendado)";
+  const lateFee = data.lateFeePercentage || 1.5;
+
+  let deliverablesText = "";
+  if (data.deliverables && data.deliverables.length > 0) {
+    deliverablesText = data.deliverables.filter(d => d && d.trim()).map(d => `- ${d}`).join("\n");
+  } 
+  if (!deliverablesText) {
+    deliverablesText = "- Entregables por definir";
+  }
+
+  let paymentStructureDesc = "50% como anticipo inicial para dar inicio al proyecto y 50% al momento de la entrega final.";
+  if (data.paymentStructure === "33_33_34") {
+    paymentStructureDesc = "33% como anticipo inicial, 33% al alcanzar el 50% de avance y 34% al momento de la entrega final.";
+  } else if (data.paymentStructure === "100_upfront") {
+    paymentStructureDesc = "100% por adelantado a la firma y formalización de este acuerdo.";
+  } else if (data.paymentStructure === "monthly_retainer") {
+    paymentStructureDesc = "Iguala mensual recurrente a ser cancelada por adelantado en los primeros 5 días calendarios de cada mes.";
+  }
+
+  let customClausesText = "";
+  if (data.customClauses && data.customClauses.trim()) {
+    customClausesText = `\n---\n\n## CLÁUSULA SÉPTIMA: ESTIPULACIONES Y PROTECCIONES ESPECIALES\n${data.customClauses.trim()}`;
+  }
+
+  return `CONTRATO DE PRESTACIÓN DE SERVICIOS PROFESIONALES
+
+## ENCABEZADO Y PARTES CONTRATANTES
+En la fecha de firma del presente documento, comparecen por una parte ${provider} (en adelante, el "PRESTADOR"), identificado con RIF/DNI N° ${providerId}; y por la otra parte ${client} (en adelante, el "CLIENTE"), identificado con RIF/DNI N° ${clientId}.
+
+---
+
+## CLÁUSULA PRIMERA: OBJETO DEL CONTRATO
+El PRESTADOR se compromete a prestar a favor del CLIENTE los servicios profesionales de "${title}".
+
+**Detalle del Alcance:**
+${scope}
+
+---
+
+## CLÁUSULA SEGUNDA: ENTREGABLES Y CRONOGRAMA DE EJECUCIÓN
+El proyecto se ejecutará en un plazo estimado de ${days} días calendarios, contados a partir de la firma de este acuerdo y la recepción del primer pago.
+
+**Entregables Aceptados:**
+${deliverablesText}
+
+---
+
+## CLÁUSULA TERCERA: HONORARIOS Y CONDICIONES DE PAGO
+Como contraprestación total por los servicios prestados, el CLIENTE se obliga a pagar la suma de ${amount} ${currency}.
+
+- **Estructura de Pago:** ${paymentStructureDesc}
+- **Penalización por Mora:** Toda factura no cancelada tras 5 días de su vencimiento devengará un interés de mora del ${lateFee}% mensual.
+
+---
+
+## CLÁUSULA CUARTA: PROPIEDAD INTELECTUAL
+${data.includeIPClause !== false 
+  ? 'La propiedad intelectual y los derechos de autor patrimoniales sobre los entregables finales desarrollados se transferirán al CLIENTE de manera exclusiva e irrevocable ÚNICAMENTE tras la recepción total y efectiva del 100% de los honorarios acordados.' 
+  : 'El PRESTADOR conserva los derechos patrimoniales sobre el código o material desarrollado, concediendo al CLIENTE una licencia de uso no exclusiva.'}
+
+---
+
+## CLÁUSULA QUINTA: CONFIDENCIALIDAD (NDA)
+${data.includeNDA !== false 
+  ? 'Ambas partes acuerdan mantener en estricta confidencialidad toda la información técnica, comercial o financiera compartida durante la ejecución de este proyecto.' 
+  : 'Este contrato no incluye cláusulas especiales de confidencialidad salvo lo dispuesto por la legislación civil ordinaria.'}
+
+---
+
+## CLÁUSULA SEXTA: JURISDICCIÓN Y LEY APLICABLE
+Este contrato se regirá e interpretará conforme a las leyes vigentes en ${jurisdiction}.${customClausesText}
+
+---
+
+## FIRMAS DE CONFORMIDAD
+
+_________________________________             _________________________________
+**POR EL PRESTADOR**                           **POR EL CLIENTE**
+${provider}                                    ${client}
+`;
+}
+
 export default function Home() {
   const [activeTemplateId, setActiveTemplateId] = useState("tpl_web_fullstack");
   const [isGenerating, setIsGenerating] = useState(false);
   const [mobileView, setMobileView] = useState("wizard"); // 'wizard' | 'preview'
 
   // Formulario inicial rellenado con la plantilla por defecto en español
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     providerName: "DevStudio Freelance C.A.",
     providerTaxId: "J-40912345-0",
     clientName: "Acme Corp LLC",
     clientTaxId: "XX-9876543",
-    projectTitle: "Desarrollo Web Full-Stack Next.js",
-    scope: "Desarrollo completo de aplicación web responsive utilizando Next.js, integración de API backend, base de datos y sistema de autenticación de usuarios. Pruebas unitarias básicas y optimización de velocidad de carga (SEO técnico).",
+    projectTitle: "Desarrollo Web Next.js",
+    scope: "Desarrollo completo de aplicación web responsive utilizando Next.js, integración de API backend, base de datos y sistema de autenticación de usuarios. Pruebas unitarias básicas y optimización SEO.",
     deliverables: [
-      "Código fuente completo en repositorio GitHub/GitLab",
-      "Documentación técnica de despliegue y variables de entorno",
+      "Código fuente completo en repositorio GitHub",
+      "Documentación técnica de despliegue",
       "Web pública desplegada en producción (Vercel/AWS)",
-      "30 días de garantía para corrección de bugs o errores de código"
+      "Garantía de 30 días para corrección de bugs"
     ],
     totalAmount: 1500,
     currency: "USD",
@@ -35,64 +129,10 @@ export default function Home() {
     includeIPClause: true,
     includeNDA: true,
     customClauses: ""
-  });
+  };
 
-  // Texto del contrato inicial por defecto en español
-  const [contractText, setContractText] = useState(`CONTRATO DE PRESTACIÓN DE SERVICIOS PROFESIONALES
-
-## ENCABEZADO Y PARTES CONTRATANTES
-En la fecha de firma del presente documento, comparecen por una parte DevStudio Freelance C.A. (en adelante, el "PRESTADOR"), identificado con RIF/DNI N° J-40912345-0; y por la otra parte Acme Corp LLC (en adelante, el "CLIENTE"), identificado con RIF/DNI N° XX-9876543.
-
----
-
-## CLÁUSULA PRIMERA: OBJETO DEL CONTRATO
-El PRESTADOR se compromete a prestar a favor del CLIENTE los servicios profesionales consistentes en: "Desarrollo Web Full-Stack Next.js".
-
-**Detalle del Alcance:**
-Desarrollo completo de aplicación web responsive utilizando Next.js, integración de API backend, base de datos y sistema de autenticación de usuarios. Pruebas unitarias básicas y optimización de velocidad de carga (SEO técnico).
-
----
-
-## CLÁUSULA SEGUNDA: ENTREGABLES Y CRONOGRAMA DE EJECUCIÓN
-El proyecto se ejecutará en un plazo estimado de 21 días calendarios, contados a partir de la firma de este acuerdo y la recepción del primer pago.
-
-**Entregables Aceptados:**
-- Código fuente completo en repositorio GitHub/GitLab
-- Documentación técnica de despliegue y variables de entorno
-- Web pública desplegada en producción (Vercel/AWS)
-- 30 días de garantía para corrección de bugs o errores de código
-
----
-
-## CLÁUSULA TERCERA: HONORARIOS Y CONDICIONES DE PAGO
-Como contraprestación total por los servicios prestados, el CLIENTE se obliga a pagar la suma fija e incondicional de 1500 USD.
-
-- **Estructura de Pago:** 50% como anticipo inicial para dar inicio al proyecto y 50% al momento de la entrega final.
-- **Penalización por Mora:** Toda factura no cancelada tras 5 días de su vencimiento devengará un interés de mora del 1.5% mensual hasta su total pago.
-
----
-
-## CLÁUSULA CUARTA: PROPIEDAD INTELECTUAL
-La propiedad intelectual y los derechos de autor patrimoniales sobre los productos y entregables finales desarrollados en virtud de este contrato se transferirán al CLIENTE de manera exclusiva e irrevocable ÚNICAMENTE tras la recepción total y efectiva del 100% de los honorarios acordados.
-
----
-
-## CLÁUSULA QUINTA: CONFIDENCIALIDAD (NDA)
-Ambas partes acuerdan mantener en estricta confidencialidad toda la información técnica, comercial o financiera compartida durante la ejecución de este proyecto.
-
----
-
-## CLÁUSULA SEXTA: JURISDICCIÓN Y LEY APLICABLE
-Este contrato se regirá e interpretará conforme a las leyes vigentes en Delaware (Recomendado).
-
----
-
-## FIRMAS DE CONFORMIDAD
-
-_________________________________             _________________________________
-**POR EL PRESTADOR**                           **POR EL CLIENTE**
-DevStudio Freelance C.A.                       Acme Corp LLC
-`);
+  const [formData, setFormData] = useState(initialFormData);
+  const [contractText, setContractText] = useState(() => buildContractDraft(initialFormData));
 
   const [auditResult, setAuditResult] = useState({
     score: 95,
@@ -103,9 +143,10 @@ DevStudio Freelance C.A.                       Acme Corp LLC
     ]
   });
 
+  // Selector de plantillas que actualiza reactivamente los datos Y el borrador en la hoja de papel
   const handleSelectTemplate = (template) => {
     setActiveTemplateId(template.id);
-    setFormData({
+    const updatedData = {
       providerName: formData.providerName || "DevStudio Freelance C.A.",
       providerTaxId: formData.providerTaxId || "J-40912345-0",
       clientName: formData.clientName || "Acme Corp LLC",
@@ -122,14 +163,37 @@ DevStudio Freelance C.A.                       Acme Corp LLC
       jurisdiction: formData.jurisdiction || "Delaware (Recomendado)",
       includeIPClause: true,
       includeNDA: true,
-      customClauses: ""
+      customClauses: formData.customClauses || ""
+    };
+
+    setFormData(updatedData);
+    setContractText(buildContractDraft(updatedData));
+    
+    // Actualizar también la recomendación de auditoría base
+    setAuditResult({
+      score: 92,
+      status: "Plantilla Inyectada",
+      alerts: [],
+      recommendations: [
+        { title: "Plantilla Aplicada", message: `Plantilla "${template.title}" inyectada con éxito.` }
+      ]
+    });
+  };
+
+  // Wrapper para setFormData que actualiza también el borrador reactivamente
+  const handleSetFormData = (updater) => {
+    setFormData(prev => {
+      const nextState = typeof updater === 'function' ? updater(prev) : updater;
+      // Actualizar automáticamente el borrador reactivo
+      setContractText(buildContractDraft(nextState));
+      return nextState;
     });
   };
 
   // Reseteo completo a borrador limpio
   const handleResetForm = () => {
     setActiveTemplateId(null);
-    setFormData({
+    const emptyData = {
       providerName: "",
       providerTaxId: "",
       clientName: "",
@@ -147,36 +211,10 @@ DevStudio Freelance C.A.                       Acme Corp LLC
       includeIPClause: true,
       includeNDA: true,
       customClauses: ""
-    });
+    };
 
-    setContractText(`CONTRATO DE PRESTACIÓN DE SERVICIOS PROFESIONALES
-
-## ENCABEZADO Y PARTES CONTRATANTES
-En la fecha [FECHA DE FIRMA], comparecen por una parte [NOMBRE DEL PRESTADOR DE SERVICIOS], (en adelante, el "PRESTADOR"); y por la otra parte [NOMBRE DEL CLIENTE], (en adelante, el "CLIENTE").
-
----
-
-## CLÁUSULA PRIMERA: OBJETO DEL CONTRATO
-[Complete el formulario con el alcance y haga clic en 'Auditar y Generar Contrato con IA' para redactar automáticamente con IA]
-
----
-
-## CLÁUSULA SEGUNDA: ENTREGABLES Y CRONOGRAMA
-[Pendiente de definir alcance y entregables...]
-
----
-
-## CLÁUSULA TERCERA: HONORARIOS Y FORMA DE PAGO
-[Pendiente de definir monto y estructura de pago...]
-
----
-
-## FIRMAS DE CONFORMIDAD
-
-_________________________________             _________________________________
-**POR EL PRESTADOR**                           **POR EL CLIENTE**
-`);
-
+    setFormData(emptyData);
+    setContractText(buildContractDraft(emptyData));
     setAuditResult(null);
   };
 
@@ -221,7 +259,7 @@ _________________________________             _________________________________
         
         <ContractWizard
           formData={formData}
-          setFormData={setFormData}
+          setFormData={handleSetFormData}
           onGenerate={handleGenerateContract}
           isGenerating={isGenerating}
           onSelectTemplate={handleSelectTemplate}
