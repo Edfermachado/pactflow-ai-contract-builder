@@ -1,84 +1,124 @@
 {
   "jurisdictions": [
-    { "id": "general", "name": "Internacional / Ley General de Comercio Digital", "code": "INT" },
-    { "id": "es", "name": "España (Código Civil & Ley de Servicios de la Sociedad de Información)", "code": "ES" },
-    { "id": "mx", "name": "México (Código de Comercio y Ley Federal de Protección al Consumidor)", "code": "MX" },
-    { "id": "co", "name": "Colombia (Código de Comercio & Comercio Electrónico)", "code": "CO" },
-    { "id": "ar", "name": "Argentina (Código Civil y Comercial de la Nación)", "code": "AR" },
-    { "id": "us", "name": "Estados Unidos / Ley Delaware & Comercio Internacional", "code": "US" }
+    { "id": "delaware", "name": "Delaware (Recommended)" },
+    { "id": "california", "name": "California" },
+    { "id": "new_york", "name": "New York" },
+    { "id": "venezuela", "name": "Venezuela (Código Civil & Comercial)" },
+    { "id": "mexico", "name": "México (Código de Comercio)" },
+    { "id": "spain", "name": "España (Código Civil)" },
+    { "id": "colombia", "name": "Colombia (Código de Comercio)" }
   ],
   "serviceTypes": [
-    { "id": "web_dev", "label": "Desarrollo Web & Aplicaciones", "icon": "Code" },
-    { "id": "ui_ux", "label": "Diseño UI/UX & Branding", "icon": "Palette" },
-    { "id": "marketing", "label": "Marketing Digital & Seo", "icon": "TrendingUp" },
-    { "id": "content", "label": "Creación de Contenido & Redacción", "icon": "FileText" },
-    { "id": "consulting", "label": "Consultoría Técnica & Asesoría", "icon": "Briefcase" }
+    { "id": "web_dev", "name": "Desarrollo Web & Software" },
+    { "id": "design", "name": "Diseño UI/UX & Branding" },
+    { "id": "marketing", "name": "Marketing Digital & SEO" },
+    { "id": "consulting", "name": "Consultoría Técnica & Asesoría" },
+    { "id": "video_motion", "name": "Producción Audiovisual & Motion" }
   ],
   "paymentStructures": [
-    { "id": "50_50", "name": "50% Anticipo + 50% al Entregar", "description": "Formato estándar de bajo riesgo para ambas partes." },
-    { "id": "milestones", "name": "Pago por Hitos / Fases (30% / 40% / 30%)", "description": "Recomendado para proyectos grandes de más de 30 días." },
-    { "id": "retainer", "name": "Retainer Mensual / Cuota Fija", "description": "Servicios continuos de soporte, diseño o mantenimiento." },
-    { "id": "100_upfront", "name": "100% Anticipado", "description": "Proyectos de corta duración (< 5 días) o consulta express." }
-  ],
-  "ipClauses": [
-    { "id": "full_transfer_on_payment", "title": "Transferencia total tras pago 100%", "text": "Los derechos patrimoniales de propiedad intelectual sobre los entregables serán transferidos al CLIENTE de forma exclusiva únicamente al momento de la recepción completa e incondicional del pago total pactado." },
-    { "id": "shared_license", "title": "Licencia no exclusiva de uso", "text": "El PRESTADOR conserva la propiedad intelectual de la metodología y librerías base, otorgando al CLIENTE una licencia perpetua e irrevocable para el uso del producto final." },
-    { "id": "portfolio_rights", "title": "Derecho a exhibir en Portafolio", "text": "El PRESTADOR se reserva el derecho de exhibir el trabajo finalizado en su portafolio comercial y canales digitales con fines promocionales, respetando la confidencialidad de datos sensibles." }
+    { "id": "50_50", "name": "50% Anticipo + 50% al Entregar" },
+    { "id": "33_33_34", "name": "3 Pagos (33% Inicial, 33% Avance, 34% Final)" },
+    { "id": "100_upfront", "name": "100% Por Adelantado" },
+    { "id": "monthly_retainer", "name": "Iguala Mensual (Retainer)" }
   ],
   "templates": [
     {
       "id": "tpl_web_fullstack",
-      "title": "Desarrollo Web Full-Stack Next.js",
-      "serviceType": "web_dev",
-      "jurisdiction": "general",
-      "scope": "Desarrollo completo de aplicación web responsive utilizando Next.js, integración de API backend, base de datos y sistema de autenticación de usuarios. Pruebas unitarias básicas y optimización de velocidad de carga (SEO técnico).",
+      "title": "Desarrollo Web Next.js",
+      "scope": "Desarrollo completo de aplicación web responsive utilizando Next.js, integración de API backend, base de datos y sistema de autenticación de usuarios. Pruebas unitarias básicas y optimización SEO.",
       "deliverables": [
-        "Código fuente completo en repositorio GitHub/GitLab",
-        "Documentación técnica de despliegue y variables de entorno",
+        "Código fuente completo en repositorio GitHub",
+        "Documentación técnica de despliegue",
         "Web pública desplegada en producción (Vercel/AWS)",
-        "30 días de garantía para corrección de bugs o errores de código"
+        "Garantía de 30 días para corrección de bugs"
       ],
-      "timelineDays": 21,
-      "paymentStructure": "50_50",
       "totalAmount": 1500,
       "currency": "USD",
+      "timelineDays": 21,
+      "paymentStructure": "50_50",
       "lateFeePercentage": 1.5,
       "revisionRounds": 2
     },
     {
       "id": "tpl_brand_design",
-      "title": "Diseño de Identidad de Marca & Sistema UI",
-      "serviceType": "ui_ux",
-      "jurisdiction": "general",
+      "title": "Identidad de Marca & UI Kit",
       "scope": "Creación de manual de marca, paleta de colores, tipografías corporativas, diseño de logotipo en formato vectorial y UI Kit ejecutable en Figma para producto web/móvil.",
       "deliverables": [
-        "Archivo maestro de Figma con componentes interactivos",
-        "Manual de Identidad de Marca en PDF de alta resolución",
-        "Pack de logotipos vectoriales (SVG, PNG transparente, AI)",
-        "Guía de estilos de componentes UI"
+        "Manual de Identidad Visual en formato PDF",
+        "Archivo vectorial del Logotipo (SVG, EPS, PNG)",
+        "Sistema de Diseño UI Kit en Figma",
+        "2 Rondas de Revisiones incluidas"
       ],
-      "timelineDays": 14,
-      "paymentStructure": "50_50",
       "totalAmount": 950,
       "currency": "USD",
+      "timelineDays": 14,
+      "paymentStructure": "50_50",
+      "lateFeePercentage": 1.5,
+      "revisionRounds": 2
+    },
+    {
+      "id": "tpl_digital_marketing",
+      "title": "Marketing Digital Retainer",
+      "scope": "Optimización continua de campañas publicitarias en Meta Ads / Google Ads, auditoría SEO mensual, creación de 8 piezas gráficas publicitarias y reporte mensual de métricas.",
+      "deliverables": [
+        "Gestión mensual de anuncios publicitarios",
+        "8 Artes finales gráficos para redes sociales",
+        "Reporte mensual de rendimiento de conversiones",
+        "Reunión mensual de alineación estratégica"
+      ],
+      "totalAmount": 600,
+      "currency": "USD",
+      "timelineDays": 30,
+      "paymentStructure": "monthly_retainer",
       "lateFeePercentage": 2.0,
+      "revisionRounds": 2
+    },
+    {
+      "id": "tpl_mobile_app",
+      "title": "App Móvil React Native",
+      "scope": "Desarrollo de aplicación móvil multiplataforma (iOS y Android) con React Native, notificación push, pasarela de pago Stripe y publicación en App Store y Google Play.",
+      "deliverables": [
+        "Código fuente del proyecto móvil",
+        "Publicación aprobada en App Store y Google Play Store",
+        "Panel de administración web para gestión de datos",
+        "60 Días de soporte técnico posterior"
+      ],
+      "totalAmount": 3200,
+      "currency": "USD",
+      "timelineDays": 45,
+      "paymentStructure": "33_33_34",
+      "lateFeePercentage": 1.5,
       "revisionRounds": 3
     },
     {
-      "id": "tpl_marketing_retainer",
-      "title": "Gestión Mensual de Marketing Digital & SEO",
-      "serviceType": "marketing",
-      "jurisdiction": "general",
-      "scope": "Optimización continua de campañas publicitarias en Meta Ads / Google Ads, auditoría SEO mensual, creación de 8 piezas gráficas publicitarias y reporte mensual de métricas y conversión.",
+      "id": "tpl_tech_consulting",
+      "title": "Consultoría & Arquitectura Software",
+      "scope": "Asesoría técnica estratégica, evaluación de infraestructura cloud, diseño de arquitectura de microservicios y recomendaciones de seguridad de datos.",
       "deliverables": [
-        "Dashboard interactivo de rendimiento de campañas",
-        "8 Artes publicitarios optimizados para redes sociales",
-        "Reporte mensual de rendimiento y recomendación estratégica"
+        "Documento de Arquitectura de Software",
+        "Informe de Auditoría de Seguridad & Performance",
+        "10 Horas de sesiones de trabajo directo con el equipo"
       ],
-      "timelineDays": 30,
-      "paymentStructure": "retainer",
-      "totalAmount": 600,
+      "totalAmount": 1200,
       "currency": "USD",
+      "timelineDays": 10,
+      "paymentStructure": "100_upfront",
+      "lateFeePercentage": 1.5,
+      "revisionRounds": 1
+    },
+    {
+      "id": "tpl_motion_graphics",
+      "title": "Video & Motion Graphics",
+      "scope": "Producción de 3 videos promocionales animados de 30 segundos cada uno, locución profesional, edición de audio y exportación en formatos para redes sociales.",
+      "deliverables": [
+        "3 Videos promocionales renderizados en 4K MP4",
+        "Archivos de proyecto editables en After Effects",
+        "Licencia de música y efectos sonoros incluidos"
+      ],
+      "totalAmount": 800,
+      "currency": "USD",
+      "timelineDays": 12,
+      "paymentStructure": "50_50",
       "lateFeePercentage": 1.5,
       "revisionRounds": 2
     }

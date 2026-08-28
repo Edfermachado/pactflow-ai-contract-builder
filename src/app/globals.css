@@ -97,39 +97,27 @@ html, body {
 
 /* Top Navbar */
 .top-navbar {
-  height: 64px;
+  height: 60px;
   background-color: var(--bg-surface-dim);
   border-bottom: 1px solid var(--color-outline-variant);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
+  padding: 0 28px;
   z-index: 50;
   flex-shrink: 0;
 }
 
-/* Sidebar Navigation */
-.side-navbar {
-  width: 280px;
-  height: calc(100vh - 64px);
-  background-color: var(--bg-surface-container-low);
-  border-right: 1px solid var(--color-outline-variant);
-  display: flex;
-  flex-direction: column;
-  padding: 24px 16px;
-  flex-shrink: 0;
-}
-
-/* Main Split Area */
+/* Main Split Area (Clean 52% / 48% Split MVP) */
 .main-split-container {
   display: flex;
   flex: 1;
-  height: calc(100vh - 64px);
+  height: calc(100vh - 60px);
   overflow: hidden;
 }
 
 .wizard-left-panel {
-  width: 60%;
+  width: 52%;
   height: 100%;
   background-color: var(--bg-surface-container-low);
   border-right: 1px solid var(--color-outline-variant);
@@ -139,7 +127,7 @@ html, body {
 }
 
 .preview-right-panel {
-  width: 40%;
+  width: 48%;
   height: 100%;
   background-color: var(--bg-surface-container-lowest);
   display: flex;
@@ -258,4 +246,46 @@ html, body {
 
 .pulse-badge {
   animation: pulseBadge 2s infinite ease-in-out;
+}
+
+/* Print CSS Rules for Native PDF Generation / Save as PDF */
+@media print {
+  body, html, .app-container, .main-split-container {
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .top-navbar,
+  .wizard-left-panel,
+  .floating-dock,
+  .btn-secondary,
+  .pulse-badge {
+    display: none !important;
+  }
+
+  .preview-right-panel {
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    position: static !important;
+  }
+
+  .paper-sheet-container {
+    padding: 0 !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .paper-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    min-height: auto !important;
+    color: #000000 !important;
+  }
 }

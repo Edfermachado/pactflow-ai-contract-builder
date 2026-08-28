@@ -10,7 +10,7 @@ export async function generateContractPDF({
   providerName = "Prestador de Servicios",
   clientName = "Cliente",
   contractText = "",
-  watermark = "OFICIAL",
+  watermark = null,
   filename = null
 }) {
   const doc = new jsPDF({
@@ -26,11 +26,11 @@ export async function generateContractPDF({
 
   let currentY = margin;
 
-  // 1. Marca de agua suave (si es borrador u oficial)
+  // 1. Marca de agua suave (solo si se especifica explícitamente)
   const addPageDecorations = (pageNum, totalPages) => {
     doc.saveGraphicsState();
     
-    // Marca de agua
+    // Marca de agua si existe
     if (watermark) {
       doc.setTextColor(230, 230, 235);
       doc.setFontSize(54);
@@ -45,7 +45,7 @@ export async function generateContractPDF({
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(140, 140, 150);
-    doc.text("DOCUMENTO LEGAL GENERADO POR AUTO-CONTRACT AI", margin, 12);
+    doc.text("PactFlow AI — Documento Legal Generado", margin, 12);
     doc.text(`REF: ${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`, pageWidth - margin, 12, { align: "right" });
 
     // Línea separadora superior
@@ -56,7 +56,7 @@ export async function generateContractPDF({
     // Pie de página
     doc.line(margin, pageHeight - 14, pageWidth - margin, pageHeight - 14);
     doc.text(`Página ${pageNum} de ${totalPages}`, pageWidth / 2, pageHeight - 8, { align: "center" });
-    doc.text("Confidencial - Solo para uso de las partes interesadas", margin, pageHeight - 8);
+    doc.text("Confidencial - Documento Formal", margin, pageHeight - 8);
 
     doc.restoreGraphicsState();
   };
@@ -128,34 +128,38 @@ export async function generateContractPDF({
     currentY += wrappedLines.length * 5 + (isHeading ? 3 : 1);
   }
 
-  // 4. Bloque de Firmas al final
-  if (currentY + 40 > pageHeight - 25) {
-    doc.addPage();
-    currentY = margin + 10;
-  } else {
-    currentY += 15;
+  // 4. Bloque de Firmas al final (solo si el texto NO contiene ya una sección de firmas)
+  const hasSignaturesInText = cleanText.includes("FIRMAS DE CONFORMIDAD") || cleanText.includes("POR EL PRESTADOR") || cleanText.includes("_________________________________");
+  
+  if (!hasSignaturesInText) {
+    if (currentY + 40 > pageHeight - 25) {
+      doc.addPage();
+      currentY = margin + 10;
+    } else {
+      currentY += 15;
+    }
+
+    doc.setDrawColor(200, 205, 215);
+    doc.setLineWidth(0.4);
+
+    // Firma Prestador
+    const boxWidth = (contentWidth - 10) / 2;
+    doc.line(margin, currentY + 15, margin + boxWidth, currentY + 15);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(30, 41, 59);
+    doc.text(`POR EL PRESTADOR:`, margin, currentY + 20);
+    doc.setFont("helvetica", "normal");
+    doc.text(`${providerName}`, margin, currentY + 25);
+
+    // Firma Cliente
+    const rightBoxX = margin + boxWidth + 10;
+    doc.line(rightBoxX, currentY + 15, rightBoxX + boxWidth, currentY + 15);
+    doc.setFont("helvetica", "bold");
+    doc.text(`POR EL CLIENTE:`, rightBoxX, currentY + 20);
+    doc.setFont("helvetica", "normal");
+    doc.text(`${clientName}`, rightBoxX, currentY + 25);
   }
-
-  doc.setDrawColor(200, 205, 215);
-  doc.setLineWidth(0.4);
-
-  // Firma Prestador
-  const boxWidth = (contentWidth - 10) / 2;
-  doc.line(margin, currentY + 15, margin + boxWidth, currentY + 15);
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(9);
-  doc.setTextColor(30, 41, 59);
-  doc.text(`POR EL PRESTADOR:`, margin, currentY + 20);
-  doc.setFont("helvetica", "normal");
-  doc.text(`${providerName}`, margin, currentY + 25);
-
-  // Firma Cliente
-  const rightBoxX = margin + boxWidth + 10;
-  doc.line(rightBoxX, currentY + 15, rightBoxX + boxWidth, currentY + 15);
-  doc.setFont("helvetica", "bold");
-  doc.text(`POR EL CLIENTE:`, rightBoxX, currentY + 20);
-  doc.setFont("helvetica", "normal");
-  doc.text(`${clientName}`, rightBoxX, currentY + 25);
 
   // 5. Aplicar decoraciones a todas las páginas (Número de página total)
   const totalPages = doc.internal.getNumberOfPages();

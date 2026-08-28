@@ -64,12 +64,12 @@ export default function ContractWizard({
   const progress = getProgress();
 
   return (
-    <div className="wizard-left-panel">
+    <div className="wizard-left-panel" style={{ width: "100%", overflowX: "hidden" }}>
       
       {/* Stepper Header */}
-      <header style={{ padding: "28px 32px", borderBottom: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "24px", fontWeight: "700", color: "var(--color-on-surface)" }}>
+      <header style={{ padding: "24px 28px", borderBottom: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)", width: "100%", boxSizing: "border-box" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+          <h1 style={{ fontFamily: "var(--font-display)", fontSize: "22px", fontWeight: "700", color: "var(--color-on-surface)" }}>
             Master Services Agreement
           </h1>
           <span style={{ fontSize: "11px", fontFamily: "var(--font-mono)", padding: "4px 8px", borderRadius: "4px", backgroundColor: "rgba(192, 193, 255, 0.1)", border: "1px solid var(--color-primary)", color: "var(--color-primary)" }}>
@@ -87,7 +87,7 @@ export default function ContractWizard({
             <div style={{ width: progress.pct, height: "100%", backgroundColor: "var(--color-primary)", borderRadius: "999px", transition: "width 0.3s ease" }}></div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px", marginTop: "16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "6px", marginTop: "14px" }}>
             {[
               { id: 1, label: "1. Parties & Jurisdiction" },
               { id: 2, label: "2. Scope & Deliverables" },
@@ -100,17 +100,18 @@ export default function ContractWizard({
                 onClick={() => setActiveStepTab(tab.id)}
                 style={{
                   borderLeft: activeStepTab === tab.id ? "3px solid var(--color-primary)" : "3px solid var(--color-outline-variant)",
-                  paddingLeft: "10px",
+                  paddingLeft: "8px",
                   textAlign: "left",
                   background: "none",
                   borderTop: "none",
                   borderRight: "none",
                   borderBottom: "none",
                   cursor: "pointer",
-                  opacity: activeStepTab === tab.id ? 1 : 0.6
+                  opacity: activeStepTab === tab.id ? 1 : 0.6,
+                  overflow: "hidden"
                 }}
               >
-                <span style={{ fontSize: "11px", fontFamily: "var(--font-mono)", fontWeight: "700", color: activeStepTab === tab.id ? "var(--color-on-surface)" : "var(--color-on-surface-variant)", display: "block" }}>
+                <span style={{ fontSize: "11px", fontFamily: "var(--font-mono)", fontWeight: "700", color: activeStepTab === tab.id ? "var(--color-on-surface)" : "var(--color-on-surface-variant)", display: "block", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden" }}>
                   {tab.label}
                 </span>
               </button>
@@ -120,50 +121,89 @@ export default function ContractWizard({
       </header>
 
       {/* Form Area */}
-      <div style={{ padding: "32px", flex: 1, overflowY: "auto" }}>
+      <div style={{ padding: "28px", flex: 1, overflowY: "auto", width: "100%", boxSizing: "border-box" }}>
         
-        {/* Template Presets Selector (MCP Context) */}
-        <div style={{ marginBottom: "28px", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyBetween: "space-between", marginBottom: "12px" }}>
-            <span style={{ fontSize: "12px", fontFamily: "var(--font-mono)", color: "var(--color-tertiary)", display: "flex", alignItems: "center", gap: "6px" }}>
+        {/* Fixed & Non-Overflowing Quick Templates Selector (MCP Context) */}
+        <div style={{ marginBottom: "24px", padding: "16px", borderRadius: "8px", border: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)", width: "100%", boxSizing: "border-box" }}>
+          
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px", gap: "8px" }}>
+            <span style={{ fontSize: "12px", fontFamily: "var(--font-mono)", color: "var(--color-tertiary)", display: "flex", alignItems: "center", gap: "6px", fontWeight: "600" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>auto_awesome</span>
-              Plantillas Rápidas (MCP Context)
+              Plantillas Prehechas (MCP)
+            </span>
+            <span style={{ fontSize: "11px", color: "var(--color-on-surface-variant)" }}>
+              {templatesData.templates.length} disponibles
             </span>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px" }}>
-            {templatesData.templates.map(tpl => (
-              <button
-                key={tpl.id}
-                type="button"
-                onClick={() => onSelectTemplate(tpl)}
-                style={{
-                  padding: "12px",
-                  borderRadius: "6px",
-                  border: activeTemplateId === tpl.id ? "1px solid var(--color-primary)" : "1px solid var(--color-outline-variant)",
-                  backgroundColor: activeTemplateId === tpl.id ? "rgba(192, 193, 255, 0.1)" : "var(--bg-surface-container-high)",
-                  color: "var(--color-on-surface)",
-                  textAlign: "left",
-                  cursor: "pointer",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "4px"
-                }}
-              >
-                <span style={{ fontWeight: "700", fontSize: "13px", color: "var(--color-primary)" }}>{tpl.title}</span>
-                <span style={{ fontSize: "11px", color: "var(--color-on-surface-variant)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{tpl.scope}</span>
-                <span style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-secondary)", marginTop: "4px" }}>${tpl.totalAmount} {tpl.currency}</span>
-              </button>
-            ))}
+          {/* Selector desplegable alternativo */}
+          <div style={{ marginBottom: "12px" }}>
+            <select
+              value={activeTemplateId || ""}
+              onChange={(e) => {
+                const tpl = templatesData.templates.find(t => t.id === e.target.value);
+                if (tpl) onSelectTemplate(tpl);
+              }}
+              className="form-select"
+              style={{ fontSize: "12px", padding: "8px 12px" }}
+            >
+              <option value="" disabled>-- Seleccionar una plantilla --</option>
+              {templatesData.templates.map(t => (
+                <option key={t.id} value={t.id}>
+                  {t.title} (${t.totalAmount} {t.currency})
+                </option>
+              ))}
+            </select>
           </div>
+
+          {/* Grid de Tarjetas Ajustadas sin Desbordamiento */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "10px", width: "100%", boxSizing: "border-box" }}>
+            {templatesData.templates.map(tpl => {
+              const isSelected = activeTemplateId === tpl.id;
+              return (
+                <button
+                  key={tpl.id}
+                  type="button"
+                  onClick={() => onSelectTemplate(tpl)}
+                  style={{
+                    padding: "10px 12px",
+                    borderRadius: "6px",
+                    border: isSelected ? "1px solid var(--color-primary)" : "1px solid var(--color-outline-variant)",
+                    backgroundColor: isSelected ? "rgba(192, 193, 255, 0.12)" : "var(--bg-surface-container-high)",
+                    color: "var(--color-on-surface)",
+                    textAlign: "left",
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "2px",
+                    minWidth: "0",
+                    width: "100%",
+                    boxSizing: "border-box",
+                    overflow: "hidden"
+                  }}
+                >
+                  <span style={{ fontWeight: "700", fontSize: "12px", color: isSelected ? "var(--color-primary)" : "var(--color-on-surface)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {tpl.title}
+                  </span>
+                  <span style={{ fontSize: "11px", color: "var(--color-on-surface-variant)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {tpl.scope}
+                  </span>
+                  <span style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-secondary)", marginTop: "2px" }}>
+                    ${tpl.totalAmount} {tpl.currency}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
         </div>
 
-        <form onSubmit={(e) => e.preventDefault()} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+        <form onSubmit={(e) => e.preventDefault()} style={{ display: "flex", flexDirection: "column", gap: "20px", width: "100%", boxSizing: "border-box" }}>
           
           {/* Step 1 */}
           {activeStepTab === 1 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                   CONTRACTING ROLE
                 </label>
@@ -172,7 +212,7 @@ export default function ContractWizard({
                     type="button"
                     onClick={() => setContractRole("Service Provider")}
                     style={{
-                      padding: "8px 20px",
+                      padding: "8px 18px",
                       borderRadius: "4px",
                       fontSize: "12px",
                       fontWeight: "600",
@@ -188,7 +228,7 @@ export default function ContractWizard({
                     type="button"
                     onClick={() => setContractRole("Client")}
                     style={{
-                      padding: "8px 20px",
+                      padding: "8px 18px",
                       borderRadius: "4px",
                       fontSize: "12px",
                       fontWeight: "600",
@@ -203,7 +243,7 @@ export default function ContractWizard({
                 </div>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     GOVERNING LAW JURISDICTION
@@ -223,8 +263,8 @@ export default function ContractWizard({
                 </select>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     SERVICE PROVIDER NAME
                   </label>
@@ -237,7 +277,7 @@ export default function ContractWizard({
                   />
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     PROVIDER TAX ID
                   </label>
@@ -251,8 +291,8 @@ export default function ContractWizard({
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     CLIENT LEGAL NAME
                   </label>
@@ -265,7 +305,7 @@ export default function ContractWizard({
                   />
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     TAX ID (EIN/VAT)
                   </label>
@@ -279,7 +319,7 @@ export default function ContractWizard({
                 </div>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "12px" }}>
+              <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "8px" }}>
                 <button type="button" className="btn-primary" onClick={() => setActiveStepTab(2)}>
                   Next: Scope & Deliverables
                   <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
@@ -290,8 +330,8 @@ export default function ContractWizard({
 
           {/* Step 2 */}
           {activeStepTab === 2 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                   PROJECT TITLE
                 </label>
@@ -304,7 +344,7 @@ export default function ContractWizard({
                 />
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                   SCOPE OF SERVICES
                 </label>
@@ -317,7 +357,7 @@ export default function ContractWizard({
                 />
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     DELIVERABLES
@@ -344,7 +384,7 @@ export default function ContractWizard({
                 ))}
               </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "12px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "8px" }}>
                 <button type="button" className="btn-secondary" onClick={() => setActiveStepTab(1)}>
                   Back
                 </button>
@@ -358,9 +398,9 @@ export default function ContractWizard({
 
           {/* Step 3 */}
           {activeStepTab === 3 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "16px" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "14px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     TOTAL AMOUNT
                   </label>
@@ -373,7 +413,7 @@ export default function ContractWizard({
                   />
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     CURRENCY
                   </label>
@@ -389,7 +429,7 @@ export default function ContractWizard({
                   </select>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     TIMELINE (DAYS)
                   </label>
@@ -403,8 +443,8 @@ export default function ContractWizard({
                 </div>
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     PAYMENT STRUCTURE
                   </label>
@@ -419,7 +459,7 @@ export default function ContractWizard({
                   </select>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                     LATE FEE (% / MONTH)
                   </label>
@@ -434,7 +474,7 @@ export default function ContractWizard({
                 </div>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "12px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "8px" }}>
                 <button type="button" className="btn-secondary" onClick={() => setActiveStepTab(2)}>
                   Back
                 </button>
@@ -448,9 +488,9 @@ export default function ContractWizard({
 
           {/* Step 4 */}
           {activeStepTab === 4 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                <label style={{ display: "flex", alignItems: "center", gap: "12px", padding: "16px", borderRadius: "6px", border: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)", cursor: "pointer" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px", borderRadius: "6px", border: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)", cursor: "pointer" }}>
                   <input
                     type="checkbox"
                     checked={formData.includeIPClause ?? true}
@@ -462,7 +502,7 @@ export default function ContractWizard({
                   </div>
                 </label>
 
-                <label style={{ display: "flex", alignItems: "center", gap: "12px", padding: "16px", borderRadius: "6px", border: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)", cursor: "pointer" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "12px", padding: "14px", borderRadius: "6px", border: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)", cursor: "pointer" }}>
                   <input
                     type="checkbox"
                     checked={formData.includeNDA ?? true}
@@ -475,7 +515,7 @@ export default function ContractWizard({
                 </label>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 <label style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", textTransform: "uppercase" }}>
                   CUSTOM CLAUSES
                 </label>
@@ -488,7 +528,7 @@ export default function ContractWizard({
                 />
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-start", marginTop: "12px" }}>
+              <div style={{ display: "flex", justifyContent: "flex-start", marginTop: "8px" }}>
                 <button type="button" className="btn-secondary" onClick={() => setActiveStepTab(3)}>
                   Back
                 </button>
@@ -500,8 +540,8 @@ export default function ContractWizard({
       </div>
 
       {/* Bottom AI Assistant Dock */}
-      <div style={{ padding: "20px 32px", borderTop: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)", marginTop: "auto" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+      <div style={{ padding: "18px 28px", borderTop: "1px solid var(--color-outline-variant)", backgroundColor: "var(--bg-surface-container)", marginTop: "auto", width: "100%", boxSizing: "border-box" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           <span style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--color-on-surface-variant)", display: "flex", alignItems: "center", gap: "8px", textTransform: "uppercase" }}>
             <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "var(--color-primary)" }}>auto_awesome</span>
             Smart Clause Assistant

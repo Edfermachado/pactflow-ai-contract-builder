@@ -14,6 +14,17 @@ export default function ContractPreview({
   const [isExporting, setIsExporting] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  // Native Browser Print to Save as PDF
+  const handlePrintPDF = () => {
+    confetti({
+      particleCount: 60,
+      spread: 60,
+      origin: { y: 0.6 }
+    });
+    window.print();
+  };
+
+  // Direct jsPDF Download
   const handleExportPDF = async () => {
     try {
       setIsExporting(true);
@@ -123,13 +134,25 @@ export default function ContractPreview({
 
       {/* Floating Bottom Dock */}
       <div className="floating-dock">
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", paddingRight: "16px", borderRight: "1px solid var(--color-outline-variant)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", paddingRight: "12px", borderRight: "1px solid var(--color-outline-variant)" }}>
           <span className="pulse-badge" style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "var(--color-secondary)", display: "inline-block" }}></span>
           <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "600", color: "var(--color-secondary)" }}>
             Gemini: Validated
           </span>
         </div>
 
+        {/* Native Browser Print Button (Guardar como PDF) */}
+        <button 
+          id="btn-print-pdf-dock"
+          type="button"
+          onClick={handlePrintPDF}
+          style={{ background: "none", border: "none", color: "var(--color-primary)", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "700", display: "flex", alignItems: "center", gap: "6px" }}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>print</span>
+          Imprimir / Guardar PDF
+        </button>
+
+        {/* Direct jsPDF Download */}
         <button 
           id="btn-download-pdf-dock"
           type="button"
@@ -138,7 +161,7 @@ export default function ContractPreview({
           style={{ background: "none", border: "none", color: "var(--color-on-surface)", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: "600", display: "flex", alignItems: "center", gap: "6px" }}
         >
           <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>download</span>
-          {isExporting ? "Exportando..." : "PDF (/gen-contract-pdf)"}
+          {isExporting ? "Exportando..." : "Descargar PDF"}
         </button>
 
         <button 
@@ -148,15 +171,6 @@ export default function ContractPreview({
         >
           <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>content_copy</span>
           {copied ? "Copied!" : "MD"}
-        </button>
-
-        <button 
-          type="button"
-          onClick={() => alert("Contrato guardado exitosamente.")}
-          className="btn-primary"
-          style={{ padding: "6px 16px", fontSize: "12px" }}
-        >
-          Save
         </button>
       </div>
 

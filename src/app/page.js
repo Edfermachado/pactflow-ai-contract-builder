@@ -2,12 +2,11 @@
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
 import ContractWizard from "@/components/ContractWizard";
 import ContractPreview from "@/components/ContractPreview";
+import templatesData from "@/data/contract_templates.json";
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState("Drafts");
   const [activeTemplateId, setActiveTemplateId] = useState("tpl_web_fullstack");
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -105,8 +104,11 @@ DevStudio Freelance C.A.                       Acme Corp LLC
 
   const handleSelectTemplate = (template) => {
     setActiveTemplateId(template.id);
-    setFormData(prev => ({
-      ...prev,
+    setFormData({
+      providerName: formData.providerName || "DevStudio Freelance C.A.",
+      providerTaxId: formData.providerTaxId || "J-40912345-0",
+      clientName: formData.clientName || "Acme Corp LLC",
+      clientTaxId: formData.clientTaxId || "XX-9876543",
       projectTitle: template.title,
       scope: template.scope,
       deliverables: [...template.deliverables],
@@ -115,8 +117,66 @@ DevStudio Freelance C.A.                       Acme Corp LLC
       timelineDays: template.timelineDays,
       paymentStructure: template.paymentStructure,
       lateFeePercentage: template.lateFeePercentage,
-      revisionRounds: template.revisionRounds
-    }));
+      revisionRounds: template.revisionRounds,
+      jurisdiction: formData.jurisdiction || "Delaware (Recommended)",
+      includeIPClause: true,
+      includeNDA: true,
+      customClauses: ""
+    });
+  };
+
+  // Reset complete form & document preview to blank slate
+  const handleResetForm = () => {
+    setActiveTemplateId(null);
+    setFormData({
+      providerName: "",
+      providerTaxId: "",
+      clientName: "",
+      clientTaxId: "",
+      projectTitle: "",
+      scope: "",
+      deliverables: [""],
+      totalAmount: "",
+      currency: "USD",
+      timelineDays: "",
+      paymentStructure: "50_50",
+      lateFeePercentage: 1.5,
+      revisionRounds: 2,
+      jurisdiction: "Delaware (Recommended)",
+      includeIPClause: true,
+      includeNDA: true,
+      customClauses: ""
+    });
+
+    setContractText(`CONTRATO DE PRESTACIÓN DE SERVICIOS PROFESIONALES
+
+## ENCABEZADO Y PARTES CONTRATANTES
+En la fecha [FECHA DE FIRMA], comparecen por una parte [NOMBRE DEL PRESTADOR DE SERVICIOS], (en adelante, el "PRESTADOR"); y por la otra parte [NOMBRE DEL CLIENTE], (en adelante, el "CLIENTE").
+
+---
+
+## CLÁUSULA PRIMERA: OBJETO DEL CONTRATO
+[Complete el formulario con el alcance y haga clic en 'Audit Clauses with Legal Agent' para redactar automáticamente con IA]
+
+---
+
+## CLÁUSULA SEGUNDA: ENTREGABLES Y CRONOGRAMA
+[Pendiente de definir alcance y entregables...]
+
+---
+
+## CLÁUSULA TERCERA: HONORARIOS Y FORMA DE PAGO
+[Pendiente de definir monto y estructura de pago...]
+
+---
+
+## FIRMAS DE CONFORMIDAD
+
+_________________________________             _________________________________
+**POR EL PRESTADOR**                           **POR EL CLIENTE**
+`);
+
+    setAuditResult(null);
   };
 
   const handleGenerateContract = async () => {
@@ -147,14 +207,12 @@ DevStudio Freelance C.A.                       Acme Corp LLC
     <div className="app-container">
       
       {/* TopNavBar */}
-      <Navbar onNewContract={() => setActiveSection("Drafts")} />
+      <Navbar onNewContract={handleResetForm} />
 
+      {/* Split Main Area: Left Wizard (52%) | Right Preview (48%) */}
       <div className="main-split-container">
         
-        {/* SideNavBar */}
-        <Sidebar activeSection={activeSection} onSelectSection={setActiveSection} />
-
-        {/* Left Panel (60%) */}
+        {/* Left Panel (52%) - Form Wizard */}
         <ContractWizard
           formData={formData}
           setFormData={setFormData}
@@ -164,7 +222,7 @@ DevStudio Freelance C.A.                       Acme Corp LLC
           activeTemplateId={activeTemplateId}
         />
 
-        {/* Right Panel (40%) */}
+        {/* Right Panel (48%) - Live Paper Preview */}
         <ContractPreview
           contractText={contractText}
           setContractText={setContractText}
